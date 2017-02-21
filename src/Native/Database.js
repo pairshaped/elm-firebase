@@ -3,9 +3,9 @@ var _mrozbarry$elm_firebase$Native_Database = function () {
   // Utilities
 
   var debug = function () {
-    var args = ["Native.Firebase.debug"].concat(Array.prototype.slice.call(arguments));
-
-    console.log.apply(console, arguments);
+    // var args = ["Native.Firebase.debug"].concat(Array.prototype.slice.call(arguments));
+    //
+    // console.log.apply(console, arguments);
   };
 
   var databaseToModel = function (database) {
