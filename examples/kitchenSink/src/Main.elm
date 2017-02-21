@@ -72,8 +72,6 @@ update msg model =
     case msg of
         ReadDemo snapshot ->
             let
-                _ = Debug.log "ReadDemo" snapshot
-
                 demo : Maybe String
                 demo =
                     snapshot

@@ -8,7 +8,9 @@ effect module Firebase.Database
         , Query
         , Snapshot
         , Event(..)
+
         , database
+
         , ref
         , child
         , set
