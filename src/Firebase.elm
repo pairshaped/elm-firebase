@@ -20,7 +20,7 @@ type App = App
 type alias Config =
   { apiKey : String
   , authDomain : String
-  , databaseUrl : String
+  , databaseURL : String
   , storageBucket : String
   , messagingSenderId : String
   }

@@ -3746,6 +3746,203 @@ var _elm_lang$core$Result$fromMaybe = F2(
 		}
 	});
 
+var _elm_lang$core$Task$onError = _elm_lang$core$Native_Scheduler.onError;
+var _elm_lang$core$Task$andThen = _elm_lang$core$Native_Scheduler.andThen;
+var _elm_lang$core$Task$spawnCmd = F2(
+	function (router, _p0) {
+		var _p1 = _p0;
+		return _elm_lang$core$Native_Scheduler.spawn(
+			A2(
+				_elm_lang$core$Task$andThen,
+				_elm_lang$core$Platform$sendToApp(router),
+				_p1._0));
+	});
+var _elm_lang$core$Task$fail = _elm_lang$core$Native_Scheduler.fail;
+var _elm_lang$core$Task$mapError = F2(
+	function (convert, task) {
+		return A2(
+			_elm_lang$core$Task$onError,
+			function (_p2) {
+				return _elm_lang$core$Task$fail(
+					convert(_p2));
+			},
+			task);
+	});
+var _elm_lang$core$Task$succeed = _elm_lang$core$Native_Scheduler.succeed;
+var _elm_lang$core$Task$map = F2(
+	function (func, taskA) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (a) {
+				return _elm_lang$core$Task$succeed(
+					func(a));
+			},
+			taskA);
+	});
+var _elm_lang$core$Task$map2 = F3(
+	function (func, taskA, taskB) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (a) {
+				return A2(
+					_elm_lang$core$Task$andThen,
+					function (b) {
+						return _elm_lang$core$Task$succeed(
+							A2(func, a, b));
+					},
+					taskB);
+			},
+			taskA);
+	});
+var _elm_lang$core$Task$map3 = F4(
+	function (func, taskA, taskB, taskC) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (a) {
+				return A2(
+					_elm_lang$core$Task$andThen,
+					function (b) {
+						return A2(
+							_elm_lang$core$Task$andThen,
+							function (c) {
+								return _elm_lang$core$Task$succeed(
+									A3(func, a, b, c));
+							},
+							taskC);
+					},
+					taskB);
+			},
+			taskA);
+	});
+var _elm_lang$core$Task$map4 = F5(
+	function (func, taskA, taskB, taskC, taskD) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (a) {
+				return A2(
+					_elm_lang$core$Task$andThen,
+					function (b) {
+						return A2(
+							_elm_lang$core$Task$andThen,
+							function (c) {
+								return A2(
+									_elm_lang$core$Task$andThen,
+									function (d) {
+										return _elm_lang$core$Task$succeed(
+											A4(func, a, b, c, d));
+									},
+									taskD);
+							},
+							taskC);
+					},
+					taskB);
+			},
+			taskA);
+	});
+var _elm_lang$core$Task$map5 = F6(
+	function (func, taskA, taskB, taskC, taskD, taskE) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (a) {
+				return A2(
+					_elm_lang$core$Task$andThen,
+					function (b) {
+						return A2(
+							_elm_lang$core$Task$andThen,
+							function (c) {
+								return A2(
+									_elm_lang$core$Task$andThen,
+									function (d) {
+										return A2(
+											_elm_lang$core$Task$andThen,
+											function (e) {
+												return _elm_lang$core$Task$succeed(
+													A5(func, a, b, c, d, e));
+											},
+											taskE);
+									},
+									taskD);
+							},
+							taskC);
+					},
+					taskB);
+			},
+			taskA);
+	});
+var _elm_lang$core$Task$sequence = function (tasks) {
+	var _p3 = tasks;
+	if (_p3.ctor === '[]') {
+		return _elm_lang$core$Task$succeed(
+			{ctor: '[]'});
+	} else {
+		return A3(
+			_elm_lang$core$Task$map2,
+			F2(
+				function (x, y) {
+					return {ctor: '::', _0: x, _1: y};
+				}),
+			_p3._0,
+			_elm_lang$core$Task$sequence(_p3._1));
+	}
+};
+var _elm_lang$core$Task$onEffects = F3(
+	function (router, commands, state) {
+		return A2(
+			_elm_lang$core$Task$map,
+			function (_p4) {
+				return {ctor: '_Tuple0'};
+			},
+			_elm_lang$core$Task$sequence(
+				A2(
+					_elm_lang$core$List$map,
+					_elm_lang$core$Task$spawnCmd(router),
+					commands)));
+	});
+var _elm_lang$core$Task$init = _elm_lang$core$Task$succeed(
+	{ctor: '_Tuple0'});
+var _elm_lang$core$Task$onSelfMsg = F3(
+	function (_p7, _p6, _p5) {
+		return _elm_lang$core$Task$succeed(
+			{ctor: '_Tuple0'});
+	});
+var _elm_lang$core$Task$command = _elm_lang$core$Native_Platform.leaf('Task');
+var _elm_lang$core$Task$Perform = function (a) {
+	return {ctor: 'Perform', _0: a};
+};
+var _elm_lang$core$Task$perform = F2(
+	function (toMessage, task) {
+		return _elm_lang$core$Task$command(
+			_elm_lang$core$Task$Perform(
+				A2(_elm_lang$core$Task$map, toMessage, task)));
+	});
+var _elm_lang$core$Task$attempt = F2(
+	function (resultToMessage, task) {
+		return _elm_lang$core$Task$command(
+			_elm_lang$core$Task$Perform(
+				A2(
+					_elm_lang$core$Task$onError,
+					function (_p8) {
+						return _elm_lang$core$Task$succeed(
+							resultToMessage(
+								_elm_lang$core$Result$Err(_p8)));
+					},
+					A2(
+						_elm_lang$core$Task$andThen,
+						function (_p9) {
+							return _elm_lang$core$Task$succeed(
+								resultToMessage(
+									_elm_lang$core$Result$Ok(_p9)));
+						},
+						task))));
+	});
+var _elm_lang$core$Task$cmdMap = F2(
+	function (tagger, _p10) {
+		var _p11 = _p10;
+		return _elm_lang$core$Task$Perform(
+			A2(_elm_lang$core$Task$map, tagger, _p11._0));
+	});
+_elm_lang$core$Native_Platform.effectManagers['Task'] = {pkg: 'elm-lang/core', init: _elm_lang$core$Task$init, onEffects: _elm_lang$core$Task$onEffects, onSelfMsg: _elm_lang$core$Task$onSelfMsg, tag: 'cmd', cmdMap: _elm_lang$core$Task$cmdMap};
+
 //import Native.Utils //
 
 var _elm_lang$core$Native_Debug = function() {
@@ -7877,9 +8074,567 @@ var _mrozbarry$elm_firebase$Firebase$apps = _mrozbarry$elm_firebase$Native_Fireb
 var _mrozbarry$elm_firebase$Firebase$sdkVersion = _mrozbarry$elm_firebase$Native_Firebase.sdkVersion;
 var _mrozbarry$elm_firebase$Firebase$Config = F5(
 	function (a, b, c, d, e) {
-		return {apiKey: a, authDomain: b, databaseUrl: c, storageBucket: d, messagingSenderId: e};
+		return {apiKey: a, authDomain: b, databaseURL: c, storageBucket: d, messagingSenderId: e};
 	});
 var _mrozbarry$elm_firebase$Firebase$App = {ctor: 'App'};
+
+var _mrozbarry$elm_firebase$Firebase_Errors$WebStorageUnsupported = {ctor: 'WebStorageUnsupported'};
+var _mrozbarry$elm_firebase$Firebase_Errors$UserTokenExpired = {ctor: 'UserTokenExpired'};
+var _mrozbarry$elm_firebase$Firebase_Errors$UnauthorizedDomain = {ctor: 'UnauthorizedDomain'};
+var _mrozbarry$elm_firebase$Firebase_Errors$TooManyRequests = {ctor: 'TooManyRequests'};
+var _mrozbarry$elm_firebase$Firebase_Errors$RequiresRecentLogin = {ctor: 'RequiresRecentLogin'};
+var _mrozbarry$elm_firebase$Firebase_Errors$OperationNotAllowed = {ctor: 'OperationNotAllowed'};
+var _mrozbarry$elm_firebase$Firebase_Errors$NetworkRequestFailed = {ctor: 'NetworkRequestFailed'};
+var _mrozbarry$elm_firebase$Firebase_Errors$InvalidUserToken = {ctor: 'InvalidUserToken'};
+var _mrozbarry$elm_firebase$Firebase_Errors$InvalidApiKey = {ctor: 'InvalidApiKey'};
+var _mrozbarry$elm_firebase$Firebase_Errors$ArgumentError = {ctor: 'ArgumentError'};
+var _mrozbarry$elm_firebase$Firebase_Errors$AppNotAuthorized = {ctor: 'AppNotAuthorized'};
+var _mrozbarry$elm_firebase$Firebase_Errors$AppDeleted = {ctor: 'AppDeleted'};
+
+var _mrozbarry$elm_firebase$Native_Database = function () {
+
+  // Utilities
+
+  var debug = function () {
+    var args = ["Native.Firebase.debug"].concat(Array.prototype.slice.call(arguments));
+
+    console.log.apply(console, arguments);
+  };
+
+  var databaseToModel = function (database) {
+    var getDatabase = function () {
+      return database;
+    };
+
+    return {
+      ctor: "Database",
+      database: getDatabase
+    };
+  };
+
+
+  var referenceToModel = function (reference) {
+    var getReference = function () {
+      return reference;
+    };
+
+    return {
+      ctor: "Reference",
+      reference : getReference
+    };
+  };
+
+
+  var queryToModel = function (query) {
+    var getQuery = function () {
+      return query;
+    };
+
+    return {
+      ctor: "Query",
+      query: getQuery
+    };
+  };
+
+
+  var snapshotToModel = function (snapshot, prevKey) {
+    var getDataSnapshot = function () {
+      return snapshot;
+    };
+
+    return {
+      ctor: "DataSnapshot",
+      snapshot: getDataSnapshot,
+      prevKey: prevKey
+    };
+  };
+
+
+  var maybeWithDefault = function (fallback, maybe) {
+    return maybe.ctor == "Nothing"
+      ? fallback
+      : maybe._0
+  }
+
+  var variableToMaybe = function (variable) {
+    return variable
+      ? { ctor: "Just", _0 : variable }
+      : { ctor: "Nothing" }
+  }
+
+
+  var eventTypeToFirebaseEvent = function (eventType) {
+    debug("Firebase.Database.eventTypeToFirebaseEvent", eventType);
+
+    var firebaseEvent =
+      eventType.ctor
+      .replace(
+        /([A-Z])/g,
+        function (cap) { return "_" + cap.toLowerCase(); }
+      )
+      .replace(/^_/, "");
+
+    return firebaseEvent
+  }
+
+
+  var wrapOnce = function (eventType, source) {
+    debug("Firebase.Database.wrapOnce", eventType, source);
+    var firebaseEvent = eventTypeToFirebaseEvent(eventType)
+
+    return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
+      source.once(firebaseEvent, function (snapshot) {
+        debug("Firebase.Database.wrapOnce.succeed", firebaseEvent, source, snapshot)
+        callback(_elm_lang$core$Native_Scheduler.succeed(snapshotToModel(snapshot)))
+      }, function (err) {
+        var ctor =
+          err.code
+          .split("/")[1]
+          .replace(/-([a-z])/g, function (char) { return char[1].toUpperCase(); })
+          .replace(/^([a-z])/, function (firstChar) { return firstChar.toUpperCase(); });
+
+        debug("Firebase.Database.wrapOnce.fail", firebaseEvent, source, err)
+        callback(_elm_lang$core$Native_Scheduler.fail({ ctor: code, _0: err.message }))
+      })
+    })
+  }
+
+
+  var onCallback = function (nativeCallback, snapshot, prevKey) {
+    var maybePrevKey = variableToMaybe(prevKey)
+
+    return nativeCallback(
+      _elm_lang$core$Native_Scheduler.succeed(
+        snapshotToModel(snapshot, prevKey)
+      )
+    )
+  }
+
+
+  var wrapOn = function (eventType, source) {
+    debug("Firebase.Database.wrapOn", eventType, source);
+    var firebaseEvent = eventTypeToFirebaseEvent(eventType)
+
+    return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
+      source.on(firebaseEvent, onCallback.bind(this, callback))
+    })
+  }
+
+  var wrapOff = function (eventType, source) {
+    debug("Firebase.Database.wrapOff", eventType, source);
+    var firebaseEvent = eventTypeToFirebaseEvent(eventType)
+
+    return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
+      source.off(firebaseEvent, onCallbackWithPrevKey)
+    })
+  }
+
+
+
+  // Firebase.database methods
+
+  var init = function (appModel) {
+    debug("Firebase.Database.init", appModel, appModel.app());
+    var database = firebase.database(appModel.app())
+
+    return databaseToModel(database);
+  };
+
+
+  var ref = function (maybePath, dbModel) {
+    debug("Firebase.Database.ref", maybePath, dbModel);
+    var reference;
+    if (maybePath.ctor == "Just") {
+      reference = dbModel.database().ref(maybeWithDefault(undefined, maybePath));
+    } else {
+      reference = dbModel.database().ref()
+    }
+
+    return referenceToModel(reference);
+  };
+
+
+  // Firebase.database.ref methods
+
+
+  var child = function (path, refModel) {
+    debug("Firebase.Database.child", path, refModel);
+    var reference = refModel.reference().child(path);
+
+    return referenceToModel(reference);
+  };
+
+
+  var set = function (json, refModel) {
+    debug("Firebase.Database.set", json, refModel);
+
+    return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
+      refModel.reference().set(json, function () {
+        _elm_lang$core$Native_Scheduler.succeed(true)
+      })
+    })
+  };
+
+
+  var update = function (json, refModel) {
+    debug("Firebase.Database.update", json, refModel);
+
+    return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
+      refModel.reference().update(json, function () {
+        _elm_lang$core$Native_Scheduler.succeed(true)
+      })
+    })
+  };
+
+
+  var remove = function (refModel) {
+    debug("Firebase.Database.remove", json, refModel);
+
+    return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
+      refModel.reference().remove(function () {
+        _elm_lang$core$Native_Scheduler.succeed(true)
+      })
+    })
+  };
+
+
+  var orderByChild = function (path, refModel) {
+    debug("Firebase.Database.orderByChild", order, refModel);
+    var ref = refModel.reference();
+
+    return queryToModel(ref.orderByChild(path));
+  }
+
+
+  var orderByKey = function (refModel) {
+    debug("Firebase.Database.orderByKey", refModel);
+    var ref = refModel.reference();
+
+    return queryToModel(ref.orderByKey());
+  }
+
+
+  var orderByPriority = function (refModel) {
+    debug("Firebase.Database.orderByPriority", refModel);
+    var ref = refModel.reference();
+
+    return queryToModel(ref.orderByPriority());
+  }
+
+
+  var orderByValue = function (refModel) {
+    debug("Firebase.Database.orderByValue", refModel);
+    var ref = refModel.reference();
+
+    return queryToModel(ref.orderByValue());
+  };
+
+
+  var toString = function (refModel) {
+    debug("Firebase.Database.orderByValue", refModel);
+    var ref = refModel.reference();
+
+    return ref.toString();
+  }
+
+
+  var referenceOnce = function (eventType, refModel) {
+    debug("Firebase.Database.referenceOnce", eventType, refModel);
+    var ref = refModel.reference();
+
+    return wrapOnce(eventType, ref);
+  }
+
+
+  var referenceOn = function (eventType, refModel) {
+    debug("Firebase.Database.referenceOn", eventType, refModel);
+    var ref = refModel.reference();
+
+    return wrapOnce(eventType, ref);
+  }
+
+
+  // Firebase.database.query methods
+
+
+  var startAt = function (value, maybeKey, queryModel) {
+    debug("Firebase.Database.startAt", value, key, queryModel);
+    var query = queryModel.query();
+
+    return queryToModel(query.startAt(value, maybeWithDefault(undefined, maybeKey)));
+  }
+
+
+  var endAt = function (value, maybeKey, queryModel) {
+    debug("Firebase.Database.endAt", value, key, queryModel);
+    var query = queryModel.query();
+
+    return queryToModel(query.endAt(value, maybeWithDefault(undefined, maybeKey)));
+  }
+
+
+  var equalTo = function (value, maybeKey, queryModel) {
+    debug("Firebase.Database.equalTo", value, key, queryModel);
+    var query = queryModel.query();
+
+    return queryToModel(query.equalTo(value, maybeWithDefault(undefined, maybeKey)));
+  }
+
+
+  var limitToFirst = function (limit, queryModel) {
+    debug("Firebase.Database.limitToFirst", limit, queryModel);
+    var query = queryModel.query();
+
+    return queryToModel(query.limitToFirst(limit));
+  }
+
+
+  var limitToLast = function (limit, queryModel) {
+    debug("Firebase.Database.limitToLast", limit, queryModel);
+    var query = queryModel.query();
+
+    return queryToModel(query.limitToLast(limit));
+  }
+
+
+  var queryOnce = function (eventType, queryModel) {
+    debug("Firebase.Database.queryOnce", eventType, queryModel);
+    var query = refModel.query();
+
+    return wrapOnce(eventType, query);
+  }
+
+  // Firebase.database.snapshot methods
+
+  var snapshotKey = function (snapshotModel) {
+    debug("Firebase.Database.snapshotKey", snapshotModel);
+    var snapshot = snapshotModel.snapshot();
+
+    return variableToMaybe(snapshot.key);
+  }
+
+  var snapshotRef = function (snapshotModel) {
+    debug("Firebase.Database.snapshotRef", snapshotModel);
+    var snapshot = snapshotModel.snapshot();
+
+    return referenceToModel(snapshot.ref);
+  }
+
+  var snapshotChild = function (path, snapshotModel) {
+    debug("Firebase.Database.snapshotChild", path, snapshotModel);
+    var snapshot = snapshotModel.snapshot();
+
+    return snapshotToModel(snapshot.child(path));
+  }
+
+  var snapshotExists = function (snapshotModel) {
+    debug("Firebase.Database.snapshotExists", snapshotModel);
+    var snapshot = snapshotModel.snapshot();
+
+    return snapshot.exists()
+      ? { ctor: "True" }
+      : { ctor: "False" }
+  }
+
+  var snapshotExportVal = function (snapshotModel) {
+    debug("Firebase.Database.snapshotExportVal", snapshotModel);
+    var snapshot = snapshotModel.snapshot();
+
+    return snapshot.exportVal();
+  }
+
+  var snapshotGetPriority = function (snapshotModel) {
+    debug("Firebase.Database.snapshotGetPriority", snapshotModel);
+    var snapshot = snapshotModel.snapshot();
+
+    return snapshot.getPriority();
+  }
+
+  var snapshotValue = function (snapshotModel) {
+    debug("Firebase.Database.snapshotValue", snapshotModel);
+    var snapshot = snapshotModel.snapshot();
+
+    return snapshot.val();
+  }
+
+  var snapshotPrevKey = function (snapshotModel) {
+    debug("Firebase.Database.snapshotPrevKey", snapshotModel);
+
+    return snapshotModel.prevKey;
+  }
+
+
+  // Native export
+
+  return {
+    "init": init,
+    "ref": F2(ref),
+    "child": F2(child),
+    "set": F2(set),
+    "update": F2(update),
+    "remove": remove,
+    "orderByChild": F2(orderByChild),
+    "orderByKey": orderByKey,
+    "orderByPriority": orderByPriority,
+    "orderByValue": orderByValue,
+    "toString" : toString,
+    "referenceOnce" : F2(referenceOnce),
+    "startAt": F3(startAt),
+    "endAt": F3(endAt),
+    "equalTo": F3(equalTo),
+    "limitToFirst": F2(limitToFirst),
+    "limitToLast": F2(limitToLast),
+    "queryOnce" : F2(queryOnce),
+    "snapshotKey": snapshotKey,
+    "snapshotRef": snapshotRef,
+    "snapshotChild": F2(snapshotChild),
+    "snapshotExists": snapshotExists,
+    "snapshotExportVal": snapshotExportVal,
+    "snapshotGetPriority": snapshotGetPriority,
+    "snapshotValue": snapshotValue,
+    "snapshotPrevKey": snapshotPrevKey
+  };
+}();
+
+var _mrozbarry$elm_firebase$Firebase_Database$onSelfMsg = F3(
+	function (router, selfMsg, oldState) {
+		var _p0 = A2(
+			_elm_lang$core$Debug$log,
+			'onSelfMsg',
+			{ctor: '_Tuple3', _0: router, _1: selfMsg, _2: oldState});
+		return _elm_lang$core$Task$succeed(oldState);
+	});
+var _mrozbarry$elm_firebase$Firebase_Database$onEffects = F3(
+	function (router, newSubs, oldState) {
+		var subsToRemove = A2(
+			_elm_lang$core$List$filter,
+			function (sub) {
+				return !A2(_elm_lang$core$List$member, sub, newSubs);
+			},
+			oldState.subs);
+		var subsToAdd = A2(
+			_elm_lang$core$List$filter,
+			function (sub) {
+				return !A2(_elm_lang$core$List$member, sub, oldState.subs);
+			},
+			newSubs);
+		var _p1 = A2(
+			_elm_lang$core$Debug$log,
+			'onEffects',
+			{ctor: '_Tuple3', _0: router, _1: newSubs, _2: oldState});
+		return _elm_lang$core$Task$succeed(oldState);
+	});
+var _mrozbarry$elm_firebase$Firebase_Database$init = _elm_lang$core$Task$succeed(
+	{
+		subs: {ctor: '[]'}
+	});
+var _mrozbarry$elm_firebase$Firebase_Database$snapshotPrevKey = _mrozbarry$elm_firebase$Native_Database.snapshotPrevKey;
+var _mrozbarry$elm_firebase$Firebase_Database$snapshotValue = _mrozbarry$elm_firebase$Native_Database.snapshotValue;
+var _mrozbarry$elm_firebase$Firebase_Database$snapshotGetPriority = _mrozbarry$elm_firebase$Native_Database.snapshotGetPriority;
+var _mrozbarry$elm_firebase$Firebase_Database$snapshotExportVal = _mrozbarry$elm_firebase$Native_Database.snapshotExportVal;
+var _mrozbarry$elm_firebase$Firebase_Database$snapshotExists = _mrozbarry$elm_firebase$Native_Database.snapshotExists;
+var _mrozbarry$elm_firebase$Firebase_Database$snapshotChild = _mrozbarry$elm_firebase$Native_Database.snapshotChild;
+var _mrozbarry$elm_firebase$Firebase_Database$snapshotRef = _mrozbarry$elm_firebase$Native_Database.snapshotRef;
+var _mrozbarry$elm_firebase$Firebase_Database$snapshotKey = _mrozbarry$elm_firebase$Native_Database.snapshotKey;
+var _mrozbarry$elm_firebase$Firebase_Database$queryOnce = _mrozbarry$elm_firebase$Native_Database.once;
+var _mrozbarry$elm_firebase$Firebase_Database$limitToLast = _mrozbarry$elm_firebase$Native_Database.limitToLast;
+var _mrozbarry$elm_firebase$Firebase_Database$limitToFirst = _mrozbarry$elm_firebase$Native_Database.limitToFirst;
+var _mrozbarry$elm_firebase$Firebase_Database$equalTo = _mrozbarry$elm_firebase$Native_Database.equalTo;
+var _mrozbarry$elm_firebase$Firebase_Database$endAt = _mrozbarry$elm_firebase$Native_Database.endAt;
+var _mrozbarry$elm_firebase$Firebase_Database$startAt = _mrozbarry$elm_firebase$Native_Database.startAt;
+var _mrozbarry$elm_firebase$Firebase_Database$referenceOnce = _mrozbarry$elm_firebase$Native_Database.referenceOnce;
+var _mrozbarry$elm_firebase$Firebase_Database$toString = _mrozbarry$elm_firebase$Native_Database.toString;
+var _mrozbarry$elm_firebase$Firebase_Database$orderByValue = _mrozbarry$elm_firebase$Native_Database.orderByValue;
+var _mrozbarry$elm_firebase$Firebase_Database$orderByPriority = _mrozbarry$elm_firebase$Native_Database.orderByPriority;
+var _mrozbarry$elm_firebase$Firebase_Database$orderByKey = _mrozbarry$elm_firebase$Native_Database.orderByKey;
+var _mrozbarry$elm_firebase$Firebase_Database$orderByChild = _mrozbarry$elm_firebase$Native_Database.orderByChild;
+var _mrozbarry$elm_firebase$Firebase_Database$update = _mrozbarry$elm_firebase$Native_Database.update;
+var _mrozbarry$elm_firebase$Firebase_Database$set = _mrozbarry$elm_firebase$Native_Database.set;
+var _mrozbarry$elm_firebase$Firebase_Database$child = _mrozbarry$elm_firebase$Native_Database.child;
+var _mrozbarry$elm_firebase$Firebase_Database$ref = _mrozbarry$elm_firebase$Native_Database.ref;
+var _mrozbarry$elm_firebase$Firebase_Database$database = _mrozbarry$elm_firebase$Native_Database.init;
+var _mrozbarry$elm_firebase$Firebase_Database$subscription = _elm_lang$core$Native_Platform.leaf('Firebase.Database');
+var _mrozbarry$elm_firebase$Firebase_Database$State = function (a) {
+	return {subs: a};
+};
+var _mrozbarry$elm_firebase$Firebase_Database$Database = {ctor: 'Database'};
+var _mrozbarry$elm_firebase$Firebase_Database$Reference = {ctor: 'Reference'};
+var _mrozbarry$elm_firebase$Firebase_Database$Query = {ctor: 'Query'};
+var _mrozbarry$elm_firebase$Firebase_Database$Snapshot = {ctor: 'Snapshot'};
+var _mrozbarry$elm_firebase$Firebase_Database$ChildMoved = {ctor: 'ChildMoved'};
+var _mrozbarry$elm_firebase$Firebase_Database$ChildRemoved = {ctor: 'ChildRemoved'};
+var _mrozbarry$elm_firebase$Firebase_Database$ChildChanged = {ctor: 'ChildChanged'};
+var _mrozbarry$elm_firebase$Firebase_Database$ChildAdded = {ctor: 'ChildAdded'};
+var _mrozbarry$elm_firebase$Firebase_Database$Value = {ctor: 'Value'};
+var _mrozbarry$elm_firebase$Firebase_Database$Result = F2(
+	function (a, b) {
+		return {ctor: 'Result', _0: a, _1: b};
+	});
+var _mrozbarry$elm_firebase$Firebase_Database$QueryOff = F3(
+	function (a, b, c) {
+		return {ctor: 'QueryOff', _0: a, _1: b, _2: c};
+	});
+var _mrozbarry$elm_firebase$Firebase_Database$QueryOn = F3(
+	function (a, b, c) {
+		return {ctor: 'QueryOn', _0: a, _1: b, _2: c};
+	});
+var _mrozbarry$elm_firebase$Firebase_Database$queryOn = F3(
+	function (event, query, tagger) {
+		return _mrozbarry$elm_firebase$Firebase_Database$subscription(
+			A3(_mrozbarry$elm_firebase$Firebase_Database$QueryOn, event, query, tagger));
+	});
+var _mrozbarry$elm_firebase$Firebase_Database$ReferenceOff = F3(
+	function (a, b, c) {
+		return {ctor: 'ReferenceOff', _0: a, _1: b, _2: c};
+	});
+var _mrozbarry$elm_firebase$Firebase_Database$ReferenceOn = F3(
+	function (a, b, c) {
+		return {ctor: 'ReferenceOn', _0: a, _1: b, _2: c};
+	});
+var _mrozbarry$elm_firebase$Firebase_Database$subMap = F2(
+	function (func, subMsg) {
+		var _p2 = subMsg;
+		switch (_p2.ctor) {
+			case 'ReferenceOn':
+				return A3(
+					_mrozbarry$elm_firebase$Firebase_Database$ReferenceOn,
+					_p2._0,
+					_p2._1,
+					function (_p3) {
+						return func(
+							_p2._2(_p3));
+					});
+			case 'ReferenceOff':
+				return A3(
+					_mrozbarry$elm_firebase$Firebase_Database$ReferenceOff,
+					_p2._0,
+					_p2._1,
+					function (_p4) {
+						return func(
+							_p2._2(_p4));
+					});
+			case 'QueryOn':
+				return A3(
+					_mrozbarry$elm_firebase$Firebase_Database$QueryOn,
+					_p2._0,
+					_p2._1,
+					function (_p5) {
+						return func(
+							_p2._2(_p5));
+					});
+			default:
+				return A3(
+					_mrozbarry$elm_firebase$Firebase_Database$QueryOff,
+					_p2._0,
+					_p2._1,
+					function (_p6) {
+						return func(
+							_p2._2(_p6));
+					});
+		}
+	});
+var _mrozbarry$elm_firebase$Firebase_Database$NoOp = {ctor: 'NoOp'};
+_elm_lang$core$Native_Platform.effectManagers['Firebase.Database'] = {pkg: 'mrozbarry/elm-firebase', init: _mrozbarry$elm_firebase$Firebase_Database$init, onEffects: _mrozbarry$elm_firebase$Firebase_Database$onEffects, onSelfMsg: _mrozbarry$elm_firebase$Firebase_Database$onSelfMsg, tag: 'sub', subMap: _mrozbarry$elm_firebase$Firebase_Database$subMap};
 
 var _mrozbarry$elm_firebase$Main$view = function (model) {
 	return A2(
@@ -7945,7 +8700,22 @@ var _mrozbarry$elm_firebase$Main$view = function (model) {
 													{ctor: '_Tuple0'}))))),
 								_1: {ctor: '[]'}
 							}),
-						_1: {ctor: '[]'}
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(
+										A2(
+											_elm_lang$core$Basics_ops['++'],
+											'Demo value = ',
+											_elm_lang$core$Basics$toString(model.demo))),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
 					}
 				}
 			}
@@ -7954,19 +8724,58 @@ var _mrozbarry$elm_firebase$Main$view = function (model) {
 var _mrozbarry$elm_firebase$Main$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
-		return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+		var _p2 = _p0._0;
+		var demo = A2(
+			_elm_lang$core$Debug$log,
+			'new demo value',
+			_elm_lang$core$Maybe$Just(
+				A2(
+					_elm_lang$core$Result$withDefault,
+					'',
+					A2(
+						_elm_lang$core$Json_Decode$decodeValue,
+						_elm_lang$core$Json_Decode$string,
+						_mrozbarry$elm_firebase$Firebase_Database$snapshotValue(_p2)))));
+		var _p1 = A2(_elm_lang$core$Debug$log, 'ReadDemo', _p2);
+		return {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Native_Utils.update(
+				model,
+				{demo: demo}),
+			_1: _elm_lang$core$Platform_Cmd$none
+		};
 	});
-var _mrozbarry$elm_firebase$Main$initialModel = function (apiKey) {
+var _mrozbarry$elm_firebase$Main$initialModel = function (firebaseConfig) {
 	return {
 		app: _mrozbarry$elm_firebase$Firebase$init(
-			{apiKey: apiKey, authDomain: '', databaseUrl: '', storageBucket: '', messagingSenderId: ''})
+			A2(_elm_lang$core$Debug$log, 'initialModel.config', firebaseConfig)),
+		demo: _elm_lang$core$Maybe$Nothing
 	};
 };
+var _mrozbarry$elm_firebase$Main$Model = F2(
+	function (a, b) {
+		return {app: a, demo: b};
+	});
+var _mrozbarry$elm_firebase$Main$Flags = F5(
+	function (a, b, c, d, e) {
+		return {apiKey: a, authDomain: b, databaseURL: c, storageBucket: d, messagingSenderId: e};
+	});
+var _mrozbarry$elm_firebase$Main$ReadDemo = function (a) {
+	return {ctor: 'ReadDemo', _0: a};
+};
 var _mrozbarry$elm_firebase$Main$init = function (flags) {
+	var model = _mrozbarry$elm_firebase$Main$initialModel(flags);
+	var ref = A2(
+		_mrozbarry$elm_firebase$Firebase_Database$ref,
+		_elm_lang$core$Maybe$Just('demo'),
+		_mrozbarry$elm_firebase$Firebase_Database$database(model.app));
 	return {
 		ctor: '_Tuple2',
-		_0: _mrozbarry$elm_firebase$Main$initialModel(flags.apiKey),
-		_1: _elm_lang$core$Platform_Cmd$none
+		_0: model,
+		_1: A2(
+			_elm_lang$core$Task$perform,
+			_mrozbarry$elm_firebase$Main$ReadDemo,
+			A2(_mrozbarry$elm_firebase$Firebase_Database$referenceOnce, _mrozbarry$elm_firebase$Firebase_Database$Value, ref))
 	};
 };
 var _mrozbarry$elm_firebase$Main$main = _elm_lang$html$Html$programWithFlags(
@@ -7981,17 +8790,30 @@ var _mrozbarry$elm_firebase$Main$main = _elm_lang$html$Html$programWithFlags(
 	A2(
 		_elm_lang$core$Json_Decode$andThen,
 		function (apiKey) {
-			return _elm_lang$core$Json_Decode$succeed(
-				{apiKey: apiKey});
+			return A2(
+				_elm_lang$core$Json_Decode$andThen,
+				function (authDomain) {
+					return A2(
+						_elm_lang$core$Json_Decode$andThen,
+						function (databaseURL) {
+							return A2(
+								_elm_lang$core$Json_Decode$andThen,
+								function (messagingSenderId) {
+									return A2(
+										_elm_lang$core$Json_Decode$andThen,
+										function (storageBucket) {
+											return _elm_lang$core$Json_Decode$succeed(
+												{apiKey: apiKey, authDomain: authDomain, databaseURL: databaseURL, messagingSenderId: messagingSenderId, storageBucket: storageBucket});
+										},
+										A2(_elm_lang$core$Json_Decode$field, 'storageBucket', _elm_lang$core$Json_Decode$string));
+								},
+								A2(_elm_lang$core$Json_Decode$field, 'messagingSenderId', _elm_lang$core$Json_Decode$string));
+						},
+						A2(_elm_lang$core$Json_Decode$field, 'databaseURL', _elm_lang$core$Json_Decode$string));
+				},
+				A2(_elm_lang$core$Json_Decode$field, 'authDomain', _elm_lang$core$Json_Decode$string));
 		},
 		A2(_elm_lang$core$Json_Decode$field, 'apiKey', _elm_lang$core$Json_Decode$string)));
-var _mrozbarry$elm_firebase$Main$Model = function (a) {
-	return {app: a};
-};
-var _mrozbarry$elm_firebase$Main$Flags = function (a) {
-	return {apiKey: a};
-};
-var _mrozbarry$elm_firebase$Main$NoOp = {ctor: 'NoOp'};
 
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};

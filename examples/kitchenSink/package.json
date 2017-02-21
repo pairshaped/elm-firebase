@@ -1,13 +1,15 @@
 {
-  "name": "basic-connection",
+  "name": "kitchen-sink",
   "version": "0.0.0",
   "description": "",
   "main": "index.html",
   "scripts": {
-    "serve": "elm-live Main.elm --output=main.js"
+    "serve": "elm-live src/Main.elm --output=public/main.js --dir=public"
   },
   "author": "mrozbarry",
   "license": "BSD-3-Clause",
   "dependencies": {
+  },
+  "devDependencies": {
   }
 }

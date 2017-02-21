@@ -44,24 +44,29 @@ var _mrozbarry$elm_firebase$Native_Database = function () {
   };
 
 
-  var dataSnapshotToModel = function (dataSnapshot, callbackMethod) {
+  var snapshotToModel = function (snapshot, prevKey) {
     var getDataSnapshot = function () {
-      return dataSnapshot;
+      return snapshot;
     };
 
     return {
       ctor: "DataSnapshot",
-      dataSnapshot: getDataSnapshot
+      snapshot: getDataSnapshot,
+      prevKey: prevKey
     };
   };
 
 
   var maybeWithDefault = function (fallback, maybe) {
-    if (maybe.ctor == "Nothing") {
-      return fallback
-    } else {
-      return maybe._0
-    }
+    return maybe.ctor == "Nothing"
+      ? fallback
+      : maybe._0
+  }
+
+  var variableToMaybe = function (variable) {
+    return variable
+      ? { ctor: "Just", _0 : variable }
+      : { ctor: "Nothing" }
   }
 
 
@@ -76,7 +81,7 @@ var _mrozbarry$elm_firebase$Native_Database = function () {
       )
       .replace(/^_/, "");
 
-    return firebase event
+    return firebaseEvent
   }
 
 
@@ -86,7 +91,8 @@ var _mrozbarry$elm_firebase$Native_Database = function () {
 
     return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
       source.once(firebaseEvent, function (snapshot) {
-        _elm_lang$core$Native_Scheduler.succeed(dataSnapshotToModel(snapshot))
+        debug("Firebase.Database.wrapOnce.succeed", firebaseEvent, source, snapshot)
+        callback(_elm_lang$core$Native_Scheduler.succeed(snapshotToModel(snapshot)))
       }, function (err) {
         var ctor =
           err.code
@@ -94,21 +100,19 @@ var _mrozbarry$elm_firebase$Native_Database = function () {
           .replace(/-([a-z])/g, function (char) { return char[1].toUpperCase(); })
           .replace(/^([a-z])/, function (firstChar) { return firstChar.toUpperCase(); });
 
-        _elm_lang$core$Native_Scheduler.fail({ ctor: code, _0: err.message })
+        debug("Firebase.Database.wrapOnce.fail", firebaseEvent, source, err)
+        callback(_elm_lang$core$Native_Scheduler.fail({ ctor: code, _0: err.message }))
       })
     })
   }
 
 
   var onCallback = function (nativeCallback, snapshot, prevKey) {
-    var maybePrevKey =
-      prevKey ?
-      { ctor: "Just", _0: prevKey } :
-      { ctor: "Nothing" }
+    var maybePrevKey = variableToMaybe(prevKey)
 
-    return callback(
+    return nativeCallback(
       _elm_lang$core$Native_Scheduler.succeed(
-        [ dataSnapshotToModel(snapshot), maybePrevKey ]
+        snapshotToModel(snapshot, prevKey)
       )
     )
   }
@@ -137,24 +141,21 @@ var _mrozbarry$elm_firebase$Native_Database = function () {
   // Firebase.database methods
 
   var init = function (appModel) {
-    debug("Firebase.Database.init", appModel);
+    debug("Firebase.Database.init", appModel, appModel.app());
     var database = firebase.database(appModel.app())
 
     return databaseToModel(database);
   };
 
 
-  var root = function (dbModel) {
-    debug("Firebase.Database.root", dbModel);
-    var reference = dbModel.database().root();
-
-    return referenceToModel(reference);
-  }
-
-
-  var ref = function (path, dbModel) {
-    debug("Firebase.Database.ref", path, dbModel);
-    var reference = dbModel.database().ref(path);
+  var ref = function (maybePath, dbModel) {
+    debug("Firebase.Database.ref", maybePath, dbModel);
+    var reference;
+    if (maybePath.ctor == "Just") {
+      reference = dbModel.database().ref(maybeWithDefault(undefined, maybePath));
+    } else {
+      reference = dbModel.database().ref()
+    }
 
     return referenceToModel(reference);
   };
@@ -267,7 +268,7 @@ var _mrozbarry$elm_firebase$Native_Database = function () {
     debug("Firebase.Database.startAt", value, key, queryModel);
     var query = queryModel.query();
 
-    return queryToModel(query.startAt(value, maybeWithDefault(undefined maybeKey)));
+    return queryToModel(query.startAt(value, maybeWithDefault(undefined, maybeKey)));
   }
 
 
@@ -275,7 +276,7 @@ var _mrozbarry$elm_firebase$Native_Database = function () {
     debug("Firebase.Database.endAt", value, key, queryModel);
     var query = queryModel.query();
 
-    return queryToModel(query.endAt(value, maybeWithDefault(undefined maybeKey)));
+    return queryToModel(query.endAt(value, maybeWithDefault(undefined, maybeKey)));
   }
 
 
@@ -283,7 +284,7 @@ var _mrozbarry$elm_firebase$Native_Database = function () {
     debug("Firebase.Database.equalTo", value, key, queryModel);
     var query = queryModel.query();
 
-    return queryToModel(query.equalTo(value, maybeWithDefault(undefined maybeKey)));
+    return queryToModel(query.equalTo(value, maybeWithDefault(undefined, maybeKey)));
   }
 
 
@@ -310,12 +311,70 @@ var _mrozbarry$elm_firebase$Native_Database = function () {
     return wrapOnce(eventType, query);
   }
 
+  // Firebase.database.snapshot methods
+
+  var snapshotKey = function (snapshotModel) {
+    debug("Firebase.Database.snapshotKey", snapshotModel);
+    var snapshot = snapshotModel.snapshot();
+
+    return variableToMaybe(snapshot.key);
+  }
+
+  var snapshotRef = function (snapshotModel) {
+    debug("Firebase.Database.snapshotRef", snapshotModel);
+    var snapshot = snapshotModel.snapshot();
+
+    return referenceToModel(snapshot.ref);
+  }
+
+  var snapshotChild = function (path, snapshotModel) {
+    debug("Firebase.Database.snapshotChild", path, snapshotModel);
+    var snapshot = snapshotModel.snapshot();
+
+    return snapshotToModel(snapshot.child(path));
+  }
+
+  var snapshotExists = function (snapshotModel) {
+    debug("Firebase.Database.snapshotExists", snapshotModel);
+    var snapshot = snapshotModel.snapshot();
+
+    return snapshot.exists()
+      ? { ctor: "True" }
+      : { ctor: "False" }
+  }
+
+  var snapshotExportVal = function (snapshotModel) {
+    debug("Firebase.Database.snapshotExportVal", snapshotModel);
+    var snapshot = snapshotModel.snapshot();
+
+    return snapshot.exportVal();
+  }
+
+  var snapshotGetPriority = function (snapshotModel) {
+    debug("Firebase.Database.snapshotGetPriority", snapshotModel);
+    var snapshot = snapshotModel.snapshot();
+
+    return snapshot.getPriority();
+  }
+
+  var snapshotValue = function (snapshotModel) {
+    debug("Firebase.Database.snapshotValue", snapshotModel);
+    var snapshot = snapshotModel.snapshot();
+
+    return snapshot.val();
+  }
+
+  var snapshotPrevKey = function (snapshotModel) {
+    debug("Firebase.Database.snapshotPrevKey", snapshotModel);
+
+    return snapshotModel.prevKey;
+  }
+
 
   // Native export
 
   return {
     "init": init,
-    "root": root,
     "ref": F2(ref),
     "child": F2(child),
     "set": F2(set),
@@ -332,6 +391,14 @@ var _mrozbarry$elm_firebase$Native_Database = function () {
     "equalTo": F3(equalTo),
     "limitToFirst": F2(limitToFirst),
     "limitToLast": F2(limitToLast),
-    "queryOnce" : F2(queryOnce)
+    "queryOnce" : F2(queryOnce),
+    "snapshotKey": snapshotKey,
+    "snapshotRef": snapshotRef,
+    "snapshotChild": F2(snapshotChild),
+    "snapshotExists": snapshotExists,
+    "snapshotExportVal": snapshotExportVal,
+    "snapshotGetPriority": snapshotGetPriority,
+    "snapshotValue": snapshotValue,
+    "snapshotPrevKey": snapshotPrevKey
   };
 }();

@@ -1,16 +1,45 @@
 effect module Firebase.Database
-    where { subscription = MySub }
+    where
+        { subscription = MySub
+        }
     exposing
         ( Database
         , Reference
+        , Query
+        , Snapshot
         , Event(..)
         , database
-        , root
         , ref
         , child
+        , set
+        , update
+        , orderByChild
+        , orderByKey
+        , orderByPriority
+        , orderByValue
+        , toString
+        , referenceOnce
+
+        , startAt
+        , endAt
+        , equalTo
+        , limitToFirst
+        , limitToLast
+        , queryOnce
+        , queryOn
+
+        , snapshotKey
+        , snapshotRef
+        , snapshotChild
+        , snapshotExists
+        , snapshotExportVal
+        , snapshotGetPriority
+        , snapshotValue
+        , snapshotPrevKey
         )
 
 
+import Json.Decode
 import Json.Encode
 import Task exposing (Task)
 import Firebase
@@ -25,7 +54,7 @@ import Native.Database
 type Database = Database
 type Reference = Reference
 type Query = Query
-type DataSnapshot = DataSnapshot
+type Snapshot = Snapshot
 
 
 type Event
@@ -43,11 +72,7 @@ database : Firebase.App -> Database
 database = Native.Database.init
 
 
-root : Database -> Reference
-root = Native.Database.root
-
-
-ref : String -> Database -> Reference
+ref : Maybe String -> Database -> Reference
 ref = Native.Database.ref
 
 
@@ -87,7 +112,7 @@ toString : Reference -> String
 toString = Native.Database.toString
 
 
-referenceOnce : Event -> Reference -> Task Never DataSnapshot
+referenceOnce : Event -> Reference -> Task Never Snapshot
 referenceOnce = Native.Database.referenceOnce
 
 
@@ -115,31 +140,54 @@ limitToLast : Int -> Query -> Query
 limitToLast = Native.Database.limitToLast
 
 
-queryOnce : Event -> Query -> Task Never DataSnapshot
+queryOnce : Event -> Query -> Task Never Snapshot
 queryOnce = Native.Database.once
 
 
-queryOn : Event -> Query -> (DataSnapshot -> Maybe String -> msg) -> Sub msg
+queryOn : Event -> Query -> (Snapshot -> msg) -> Sub msg
 queryOn event query tagger =
     subscription (QueryOn event query tagger)
 
 
--- Methods/DataSnapshot
+-- Methods/Snapshot
 
-  -- TODO
+snapshotKey : Snapshot -> Maybe String
+snapshotKey = Native.Database.snapshotKey
+
+snapshotRef : Snapshot -> Reference
+snapshotRef = Native.Database.snapshotRef
+
+snapshotChild : String -> Snapshot -> Snapshot
+snapshotChild = Native.Database.snapshotChild
+
+snapshotExists : Snapshot -> Bool
+snapshotExists = Native.Database.snapshotExists
+
+snapshotExportVal : Snapshot -> Json.Decode.Value
+snapshotExportVal = Native.Database.snapshotExportVal
+
+snapshotGetPriority : Snapshot -> Json.Decode.Value
+snapshotGetPriority = Native.Database.snapshotGetPriority
+
+snapshotValue : Snapshot -> Json.Decode.Value
+snapshotValue = Native.Database.snapshotValue
+
+snapshotPrevKey : Snapshot -> Maybe String
+snapshotPrevKey = Native.Database.snapshotPrevKey
+
 
 -- Effect management/MySub
 
 
 type Tagger msg
-    = Result Firebase.Errors.Error DataSnapshot
+    = Result Firebase.Errors.Error Snapshot
 
 
 type MySub msg
-    = ReferenceOn Event Reference (DataSnapshot -> Maybe String -> msg)
-    | ReferenceOff Event Reference (DataSnapshot -> Maybe String -> msg)
-    | QueryOn Event Query (DataSnapshot -> Maybe String -> msg)
-    | QueryOff Event Query (DataSnapshot -> Maybe String -> msg)
+    = ReferenceOn Event Reference (Snapshot -> msg)
+    | ReferenceOff Event Reference (Snapshot -> msg)
+    | QueryOn Event Query (Snapshot -> msg)
+    | QueryOff Event Query (Snapshot -> msg)
 
 
 subMap : (a -> b) -> MySub a -> MySub b
@@ -174,10 +222,14 @@ init =
 
 
 type SelfMsg
-    = Snapshot DataSnapshot
+    = NoOp
 
 
-onEffects : Platform.Router msg SelfMsg -> List (MySub msg) -> State msg -> Task never (State msg)
+onEffects
+  : Platform.Router msg SelfMsg
+  -> List (MySub msg)
+  -> State msg
+  -> Task never (State msg)
 onEffects router newSubs oldState =
     let
         _ = Debug.log "onEffects" (router, newSubs, oldState)
@@ -193,6 +245,7 @@ onEffects router newSubs oldState =
                 |> List.filter (\sub -> not (List.member sub newSubs))
     in
         Task.succeed oldState
+
 
 onSelfMsg : Platform.Router msg SelfMsg -> SelfMsg -> State msg -> Task Never (State msg)
 onSelfMsg router selfMsg oldState =
