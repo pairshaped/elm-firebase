@@ -1,17 +1,20 @@
-module Firebase.Database exposing
-  ( Database
-  , Reference
-  , Event(..)
+effect module Firebase.Database
+    where { subscription = MySub }
+    exposing
+        ( Database
+        , Reference
+        , Event(..)
+        , database
+        , root
+        , ref
+        , child
+        )
 
-  , init
-  , root
-  , ref
-  , child
-  )
 
 import Json.Encode
+import Task exposing (Task)
 import Firebase
-import Firebase.Errors
+import Firebase.Errors exposing (Error)
 import Native.Database
 
 
@@ -20,6 +23,7 @@ import Native.Database
 
 
 type Database = Database
+type Reference = Reference
 type Query = Query
 type DataSnapshot = DataSnapshot
 
@@ -35,16 +39,16 @@ type Event
 -- Methods/Database
 
 
-init : Firebase.App -> Database
-init = Firebase.Native.Database.init
+database : Firebase.App -> Database
+database = Native.Database.init
 
 
 root : Database -> Reference
-root = Firebase.Native.Database.root
+root = Native.Database.root
 
 
 ref : String -> Database -> Reference
-ref = Firebase.Native.Database.ref
+ref = Native.Database.ref
 
 
 
@@ -52,39 +56,39 @@ ref = Firebase.Native.Database.ref
 
 
 child : String -> Reference -> Reference
-child = Firebase.Native.Database.child
+child = Native.Database.child
 
 
 set : Json.Encode.Value -> msg -> Reference -> Task Never Never
-set = Firebase.Native.Database.set
+set = Native.Database.set
 
 
 update : Json.Encode.Value -> msg -> Reference -> Task Never Never
-update = Firebase.Native.Database.update
+update = Native.Database.update
 
 
 orderByChild : String -> Reference -> Query
-orderByChild = Firebase.Native.Database.orderByChild
+orderByChild = Native.Database.orderByChild
 
 
 orderByKey : Reference -> Query
-orderByKey = Firebase.Native.Database.orderByKey
+orderByKey = Native.Database.orderByKey
 
 
 orderByPriority : Reference -> Query
-orderByPriority = Firebase.Native.Database.orderByPriority
+orderByPriority = Native.Database.orderByPriority
 
 
 orderByValue : Reference -> Query
-orderByChild = Firebase.Native.Database.orderByValue
+orderByValue = Native.Database.orderByValue
 
 
 toString : Reference -> String
-toString = Firebase.Native.Database.toString
+toString = Native.Database.toString
 
 
 referenceOnce : Event -> Reference -> Task Never DataSnapshot
-referenceOnce = Firebase.Native.Database.referenceOnce
+referenceOnce = Native.Database.referenceOnce
 
 
 
@@ -92,24 +96,107 @@ referenceOnce = Firebase.Native.Database.referenceOnce
 
 
 startAt : Json.Encode.Value -> Maybe String -> Query -> Query
-startAt = Firebase.Native.Database.startAt
+startAt = Native.Database.startAt
 
 
 endAt : Json.Encode.Value -> Maybe String -> Query -> Query
-endAt = Firebase.Native.Database.endAt
+endAt = Native.Database.endAt
 
 
 equalTo : Json.Encode.Value -> Maybe String -> Query -> Query
-equalTo = Firebase.Native.Database.equalTo
+equalTo = Native.Database.equalTo
 
 
 limitToFirst : Int -> Query -> Query
-limitToFirst = Firebase.Native.Database.limitToFirst
+limitToFirst = Native.Database.limitToFirst
 
 
 limitToLast : Int -> Query -> Query
-limitToLast = Firebase.Native.Database.limitToLast
+limitToLast = Native.Database.limitToLast
 
 
 queryOnce : Event -> Query -> Task Never DataSnapshot
-queryOnce = Firebase.Native.Database.once
+queryOnce = Native.Database.once
+
+
+queryOn : Event -> Query -> (DataSnapshot -> Maybe String -> msg) -> Sub msg
+queryOn event query tagger =
+    subscription (QueryOn event query tagger)
+
+
+-- Methods/DataSnapshot
+
+  -- TODO
+
+-- Effect management/MySub
+
+
+type Tagger msg
+    = Result Firebase.Errors.Error DataSnapshot
+
+
+type MySub msg
+    = ReferenceOn Event Reference (DataSnapshot -> Maybe String -> msg)
+    | ReferenceOff Event Reference (DataSnapshot -> Maybe String -> msg)
+    | QueryOn Event Query (DataSnapshot -> Maybe String -> msg)
+    | QueryOff Event Query (DataSnapshot -> Maybe String -> msg)
+
+
+subMap : (a -> b) -> MySub a -> MySub b
+subMap func subMsg =
+    case subMsg of
+        ReferenceOn event ref tagger ->
+            ReferenceOn event ref (tagger >> func)
+
+        ReferenceOff event ref tagger ->
+            ReferenceOff event ref (tagger >> func)
+
+        QueryOn event query tagger ->
+            QueryOn event query (tagger >> func)
+
+        QueryOff event query tagger ->
+            QueryOff event query (tagger >> func)
+
+
+-- Effect management/State
+
+
+type alias State msg =
+    { subs : List (MySub msg)
+    }
+
+
+init : Task Never (State msg)
+init =
+    Task.succeed
+        { subs = []
+        }
+
+
+type SelfMsg
+    = Snapshot DataSnapshot
+
+
+onEffects : Platform.Router msg SelfMsg -> List (MySub msg) -> State msg -> Task never (State msg)
+onEffects router newSubs oldState =
+    let
+        _ = Debug.log "onEffects" (router, newSubs, oldState)
+
+        subsToAdd : List (MySub msg)
+        subsToAdd =
+            newSubs
+                |> List.filter (\sub -> not (List.member sub oldState.subs))
+
+        subsToRemove : List (MySub msg)
+        subsToRemove =
+            oldState.subs
+                |> List.filter (\sub -> not (List.member sub newSubs))
+    in
+        Task.succeed oldState
+
+onSelfMsg : Platform.Router msg SelfMsg -> SelfMsg -> State msg -> Task Never (State msg)
+onSelfMsg router selfMsg oldState =
+    let
+        _ = Debug.log "onSelfMsg" (router, selfMsg, oldState)
+    in
+        Task.succeed oldState

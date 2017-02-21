@@ -44,7 +44,7 @@ var _mrozbarry$elm_firebase$Native_Database = function () {
   };
 
 
-  var dataSnapshotToModel = function (dataSnapshot) {
+  var dataSnapshotToModel = function (dataSnapshot, callbackMethod) {
     var getDataSnapshot = function () {
       return dataSnapshot;
     };
@@ -60,13 +60,13 @@ var _mrozbarry$elm_firebase$Native_Database = function () {
     if (maybe.ctor == "Nothing") {
       return fallback
     } else {
-      return maybe._value
+      return maybe._0
     }
   }
 
 
-  var wrapOnce = function (eventType, source) {
-    debug("Firebase.Database.wrapOnce", eventType, source);
+  var eventTypeToFirebaseEvent = function (eventType) {
+    debug("Firebase.Database.eventTypeToFirebaseEvent", eventType);
 
     var firebaseEvent =
       eventType.ctor
@@ -75,6 +75,14 @@ var _mrozbarry$elm_firebase$Native_Database = function () {
         function (cap) { return "_" + cap.toLowerCase(); }
       )
       .replace(/^_/, "");
+
+    return firebase event
+  }
+
+
+  var wrapOnce = function (eventType, source) {
+    debug("Firebase.Database.wrapOnce", eventType, source);
+    var firebaseEvent = eventTypeToFirebaseEvent(eventType)
 
     return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
       source.once(firebaseEvent, function (snapshot) {
@@ -90,6 +98,41 @@ var _mrozbarry$elm_firebase$Native_Database = function () {
       })
     })
   }
+
+
+  var onCallback = function (nativeCallback, snapshot, prevKey) {
+    var maybePrevKey =
+      prevKey ?
+      { ctor: "Just", _0: prevKey } :
+      { ctor: "Nothing" }
+
+    return callback(
+      _elm_lang$core$Native_Scheduler.succeed(
+        [ dataSnapshotToModel(snapshot), maybePrevKey ]
+      )
+    )
+  }
+
+
+  var wrapOn = function (eventType, source) {
+    debug("Firebase.Database.wrapOn", eventType, source);
+    var firebaseEvent = eventTypeToFirebaseEvent(eventType)
+
+    return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
+      source.on(firebaseEvent, onCallback.bind(this, callback))
+    })
+  }
+
+  var wrapOff = function (eventType, source) {
+    debug("Firebase.Database.wrapOff", eventType, source);
+    var firebaseEvent = eventTypeToFirebaseEvent(eventType)
+
+    return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
+      source.off(firebaseEvent, onCallbackWithPrevKey)
+    })
+  }
+
+
 
   // Firebase.database methods
 
@@ -203,6 +246,14 @@ var _mrozbarry$elm_firebase$Native_Database = function () {
 
   var referenceOnce = function (eventType, refModel) {
     debug("Firebase.Database.referenceOnce", eventType, refModel);
+    var ref = refModel.reference();
+
+    return wrapOnce(eventType, ref);
+  }
+
+
+  var referenceOn = function (eventType, refModel) {
+    debug("Firebase.Database.referenceOn", eventType, refModel);
     var ref = refModel.reference();
 
     return wrapOnce(eventType, ref);
