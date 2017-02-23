@@ -7,11 +7,15 @@ import Task exposing (Task)
 import Json.Decode
 import Dict exposing (Dict)
 import Firebase
+import Firebase.Errors exposing (Error)
 import Firebase.Database
 import Firebase.Database.Query
 import Firebase.Database.Reference
 import Firebase.Database.Snapshot
 import Firebase.Database.Types exposing (Database, Query, Reference, Snapshot)
+import Firebase.Authentication
+import Firebase.Authentication.User
+import Firebase.Authentication.Types exposing (Auth, User)
 
 
 -- Entry Point
@@ -56,6 +60,7 @@ type alias Model =
     , subscription : Bool
     , subRef : Reference
     , subQuery : Query
+    , currentUser : Maybe User
     }
 
 
@@ -99,6 +104,7 @@ initialModel firebaseConfig =
         , subscription = True
         , subRef = subRef
         , subQuery = subQuery
+        , currentUser = Nothing
         }
 
 
@@ -129,6 +135,10 @@ type Msg
     | SubscriptionChange Snapshot
     | ToggleSubscription
     | CollectionQuery Snapshot
+    | SignInAnonymously
+    | SignedIn (Result Error User)
+    | SignOut
+    | NoOp ()
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -193,6 +203,47 @@ update msg model =
                 )
 
 
+        SignInAnonymously ->
+            let
+                auth : Auth
+                auth =
+                    model.app
+                        |> Firebase.Authentication.init
+            in
+                ( model
+                , Task.attempt SignedIn (Firebase.Authentication.signInAnonymously auth)
+                )
+
+
+        SignedIn (Ok user) ->
+            ( { model | currentUser = Just user }
+            , Cmd.none
+            )
+
+        SignedIn (Err err) ->
+            let
+                _ = Debug.log "SignedIn.fail" err
+            in
+                ( { model | currentUser = Nothing }
+                , Cmd.none
+                )
+
+        SignOut ->
+            let
+                auth : Auth
+                auth =
+                    model.app
+                        |> Firebase.Authentication.init
+            in
+                ( { model | currentUser = Nothing }
+                , Task.perform NoOp (Firebase.Authentication.signOut auth)
+                )
+
+        NoOp _ ->
+          ( model
+          , Cmd.none
+          )
+
 
 -- View
 
@@ -220,4 +271,19 @@ view model =
                 )
             ]
         , div [] [ text ("Collection query = " ++ (toString model.collection)) ]
+        , viewSignIn model.currentUser
         ]
+
+viewSignIn : Maybe User -> Html Msg
+viewSignIn maybeUser =
+    case maybeUser of
+        Just user ->
+            div
+                []
+                [ div [] [ text "Successfully authenticated" ]
+                , div [] [ text ("Is anonymous? " ++ (toString (Firebase.Authentication.User.isAnonymous user)))]
+                , button [ onClick SignOut ] [ text "Sign out" ]
+                ]
+
+        Nothing ->
+            button [ onClick SignInAnonymously ] [ text "Sign in anonymously" ]

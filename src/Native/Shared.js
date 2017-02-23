@@ -70,8 +70,7 @@ var _pairshaped$elm_firebase$Native_Shared = function () {
 
     return {
       ctor: "Database",
-      database: getDatabase,
-      uuid: uuid()
+      database: getDatabase
     };
   };
 
@@ -96,7 +95,9 @@ var _pairshaped$elm_firebase$Native_Shared = function () {
     return {
       ctor: "Snapshot",
       snapshot: getDataSnapshot,
-      prevKey: prevKey ? { ctor: "Just", _0: prevKey } : { ctor: "Nothing" }
+      prevKey: prevKey
+        ? { ctor: "Just", _0: prevKey }
+        : { ctor: "Nothing" }
     };
   };
 
