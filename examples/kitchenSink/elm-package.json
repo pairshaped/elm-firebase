@@ -1,7 +1,7 @@
 {
     "version": "0.0.0",
     "summary": "elm-firebase example that loads everything",
-    "repository": "https://github.com/mrozbarry/elm-firebase.git",
+    "repository": "https://github.com/pairshaped/elm-firebase.git",
     "license": "BSD3",
     "native-modules": true,
     "source-directories": [

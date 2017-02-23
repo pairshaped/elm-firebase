@@ -1,4 +1,4 @@
-var _mrozbarry$elm_firebase$Native_Firebase = function () {
+var _pairshaped$elm_firebase$Native_Firebase = function () {
   var debug = function () {
     // var args = ["Native.Firebase.debug"].concat(Array.prototype.slice.call(arguments));
     //

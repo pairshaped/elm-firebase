@@ -8,15 +8,35 @@ module Firebase exposing
     , options
     )
 
+{-| elm-firebase is a near 1-to-1 wrapper around the [Firebase 3](https://firebase.google.com) javascript library.
+
+# Definitions
+@docs App, Config
+
+# App methods
+@docs init, initWithName, name, options
+
+
+# Helpers
+@docs sdkVersion, apps
+
+-}
+
 import Native.Firebase
 
 
 -- Model
 
 
+{-| App is a wrapper around [firebase.app.App](https://firebase.google.com/docs/reference/js/firebase.app.App)
+-}
 type App = App
 
 
+{-| Config is a helper type to configure your app.
+
+In the firebase project dashboard overview, you can get the values for this record by clicking *Add Firebase to your web app*.
+-}
 type alias Config =
   { apiKey : String
   , authDomain : String
@@ -29,6 +49,8 @@ type alias Config =
 
 -- Firebase methods
 
+{-| 
+-}
 sdkVersion : String
 sdkVersion = Native.Firebase.sdkVersion
 

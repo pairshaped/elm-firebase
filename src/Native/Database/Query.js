@@ -1,4 +1,4 @@
-var _mrozbarry$elm_firebase$Native_Database_Query = function () {
+var _pairshaped$elm_firebase$Native_Database_Query = function () {
 
   // Utilities
 

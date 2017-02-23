@@ -26,7 +26,7 @@ main =
             in
                 if model.subscription then
                     Sub.batch
-                        [ Firebase.Database.Reference.subscribe "value" ref SubscriptionChange
+                        [ Firebase.Database.Reference.on "value" ref SubscriptionChange
                         ]
                 else
                     Sub.none
@@ -61,7 +61,7 @@ type alias Flags =
 
 initialModel : Flags -> Model
 initialModel firebaseConfig  =
-    { app = Firebase.init (Debug.log "initialModel.config" firebaseConfig)
+    { app = Firebase.init firebaseConfig
     , demo = Nothing
     , test = Nothing
     , subscription = False
@@ -108,7 +108,6 @@ update msg model =
                       |> Json.Decode.decodeValue (Json.Decode.string)
                       |> Result.withDefault ""
                       |> Just
-                      |> Debug.log "new demo value"
             in
                 ( { model | demo = demo }
                 , Cmd.none
@@ -116,8 +115,6 @@ update msg model =
 
         SubscriptionChange snapshot ->
             let
-                _ = Debug.log "SubscriptionChange" snapshot
-
                 value : Maybe { foo : String }
                 value =
                     let

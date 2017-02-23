@@ -1,11 +1,11 @@
-var _mrozbarry$elm_firebase$Native_Database_Reference = function () {
+var _pairshaped$elm_firebase$Native_Database_Reference = function () {
 
   // Utilities
 
   var debug = function () {
-    var args = ["Native.Firebase.Database.Reference"].concat(Array.prototype.slice.call(arguments));
-
-    console.log.apply(console, args);
+    // var args = ["Native.Firebase.Database.Reference"].concat(Array.prototype.slice.call(arguments));
+    //
+    // console.log.apply(console, args);
   };
 
 
@@ -54,7 +54,6 @@ var _mrozbarry$elm_firebase$Native_Database_Reference = function () {
 
     return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
       source.once(eventType, function (snapshot) {
-        debug(".wrapOnce.succeed", eventType, source, snapshot)
         callback(_elm_lang$core$Native_Scheduler.succeed(snapshotToModel(snapshot)))
 
       }, function (err) {
@@ -64,7 +63,6 @@ var _mrozbarry$elm_firebase$Native_Database_Reference = function () {
           .replace(/-([a-z])/g, function (char) { return char[1].toUpperCase(); })
           .replace(/^([a-z])/, function (firstChar) { return firstChar.toUpperCase(); });
 
-        debug(".wrapOnce.fail", eventType, source, err)
         callback(_elm_lang$core$Native_Scheduler.fail({ ctor: "Error", _0: err.code, _1: err.message }))
 
       })
@@ -73,16 +71,17 @@ var _mrozbarry$elm_firebase$Native_Database_Reference = function () {
 
 
   var onCallback = function (tagger, snapshot, prevKey) {
-    debug(".onCallback", { tagger, snapshot, prevKey })
+    debug(".onCallback", tagger, snapshot, prevKey)
     _elm_lang$core$Native_Scheduler.rawSpawn(tagger(snapshotToModel(snapshot, prevKey)))
   }
 
 
   var wrapOn = function (eventType, source, tagger) {
-    debug(".wrapOn", { eventType, source, tagger })
+    debug(".wrapOn", eventType, source, tagger)
 
     return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
-      var cb = source.on(eventType, onCallback.bind(window, tagger));
+      source.on(eventType, onCallback.bind(window, tagger));
+
       callback(_elm_lang$core$Native_Scheduler.succeed({ ctor: '_Tuple0' }))
     })
   }
@@ -190,7 +189,7 @@ var _mrozbarry$elm_firebase$Native_Database_Reference = function () {
 
 
   var on = function (eventType, refModel, tagger) {
-    debug(".on", { eventType, refModel, tagger })
+    debug(".on", eventType, refModel, tagger)
     var ref = refModel.reference();
 
     return wrapOn(eventType, ref, tagger);

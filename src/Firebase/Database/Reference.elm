@@ -12,14 +12,11 @@ effect module Firebase.Database.Reference
         , orderByValue
         , toString
         , once
-        , subscribe
+        , on
         )
 
-import Json.Decode
 import Json.Encode
-import Dict exposing (Dict)
 import Task exposing (Task)
-import Process
 import Firebase.Database.Types exposing (Reference, Snapshot, Query)
 import Firebase.Errors exposing (Error)
 import Native.Database.Reference
@@ -30,11 +27,11 @@ child : String -> Reference -> Reference
 child = Native.Database.Reference.child
 
 
-set : Json.Encode.Value -> msg -> Reference -> Task Never Never
+set : Json.Encode.Value -> msg -> Reference -> Task x x
 set = Native.Database.Reference.set
 
 
-update : Json.Encode.Value -> msg -> Reference -> Task Never Never
+update : Json.Encode.Value -> msg -> Reference -> Task x x
 update = Native.Database.Reference.update
 
 
@@ -58,12 +55,12 @@ toString : Reference -> String
 toString = Native.Database.Reference.toString
 
 
-once : String -> Reference -> Task Never Snapshot
+once : String -> Reference -> Task x Snapshot
 once = Native.Database.Reference.once
 
 
-subscribe : String -> Reference -> (Snapshot -> msg) -> Sub msg
-subscribe event reference tagger =
+on : String -> Reference -> (Snapshot -> msg) -> Sub msg
+on event reference tagger =
     subscription (MySub event reference tagger)
 
 
@@ -74,6 +71,7 @@ type MySub msg
     = MySub String Reference (Snapshot -> msg)
 
 
+-- TODO: What/how does this work.
 subMap : (a -> b) -> MySub a -> MySub b
 subMap func subMsg =
     case subMsg of
@@ -89,7 +87,7 @@ type alias State msg =
     }
 
 
-init : Task Never (State msg)
+init : Task x (State msg)
 init =
     Task.succeed
         { subs = []
@@ -99,9 +97,9 @@ init =
 type SelfMsg msg
     = ManageSubscriptions { toAdd : List (MySub msg), toRemove: List (MySub msg) }
     | Update (Snapshot -> msg) Snapshot
-    -- | UnsubscribeTo (Mysub msg)
 
 
+-- Do task 1, discard it's return value, then do task 2
 (&>) t1 t2 =
     Task.andThen (\_ -> t2) t1
 
@@ -128,7 +126,7 @@ onEffects router newSubs oldState =
         toRemove : List (MySub msg)
         toRemove =
             let
-                subscribed (MySub oldEvent oldReference _) =
+                subscribed (MySub oldEvent oldReference tagger) =
                     newSubs
                         |> List.filter (\(MySub event reference _) -> event == oldEvent && (toString reference) == (toString oldReference))
                         |> List.isEmpty
@@ -142,9 +140,9 @@ onEffects router newSubs oldState =
             &> Task.succeed { oldState | subs = newSubs }
 
 
-onSelfMsg : Platform.Router msg (SelfMsg msg) -> (SelfMsg msg) -> State msg -> Task Never (State msg)
+onSelfMsg : Platform.Router msg (SelfMsg msg) -> (SelfMsg msg) -> State msg -> Task x (State msg)
 onSelfMsg router selfMsg oldState =
-    case (Debug.log "onSelfMsg" selfMsg) of
+    case selfMsg of
         ManageSubscriptions { toAdd, toRemove } ->
             let
                 addAll : Task x (State msg) -> Task x (State msg)
@@ -157,8 +155,6 @@ onSelfMsg router selfMsg oldState =
                 addSubscription : MySub msg -> Task x (State msg) -> Task x (State msg)
                 addSubscription mySub lastTask =
                     let
-                        _ = Debug.log "addSubscription" mySub
-
                         nativeTask : String -> Reference -> (Snapshot -> msg) -> Task x ()
                         nativeTask event reference tagger =
                             Native.Database.Reference.on
@@ -184,8 +180,6 @@ onSelfMsg router selfMsg oldState =
                   case mySub of
                       MySub event reference tagger ->
                           let
-                              _ = Debug.log "removeSubscription" mySub
-
                               nativeTask : String -> Reference -> Task x ()
                               nativeTask event reference =
                                   Native.Database.Reference.off
