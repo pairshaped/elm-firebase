@@ -1,4 +1,7 @@
-function elmFirebaseOnSnapshot (tagger, snapshot, prevKey) {
+/* This will be hoisted to the top of the elm function wrapper, but not be exposed to
+ * the global scope.
+ */
+function _pairshaped$elm_firebase$Native_Shared$onSnapshot (tagger, snapshot, prevKey) {
   _elm_lang$core$Native_Scheduler.rawSpawn(
     tagger(
       _pairshaped$elm_firebase$Native_Shared.snapshotToModel(snapshot, prevKey)
@@ -113,7 +116,7 @@ var _pairshaped$elm_firebase$Native_Shared = function () {
 
   var sourceOnSnapshot = function (eventType, source, tagger) {
     return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
-      source.on(eventType, elmFirebaseOnSnapshot.bind(window, tagger));
+      source.on(eventType, _pairshaped$elm_firebase$Native_Shared$onSnapshot.bind(window, tagger));
 
       callback(_elm_lang$core$Native_Scheduler.succeed({ ctor: '_Tuple0' }))
     })
@@ -121,18 +124,47 @@ var _pairshaped$elm_firebase$Native_Shared = function () {
 
 
   var sourceOffSnapshot = function (eventType, source) {
-    source.off(eventType, elmFirebaseOnSnapshot);
+    return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
+      source.off(eventType, _pairshaped$elm_firebase$Native_Shared$onSnapshot);
+
+      callback(_elm_lang$core$Native_Scheduler.succeed({ ctor: '_Tuple0' }))
+    })
+  }
+
+
+  var sourceOnceSnapshot = function (eventType, source) {
+    return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
+      source.once(eventType, function (snapshot) {
+        callback(
+          _elm_lang$core$Native_Scheduler.succeed(
+            _pairshaped$elm_firebase$Native_Shared.snapshotToModel(snapshot)
+          )
+        );
+
+      }, function (err) {
+        callback(
+          _elm_lang$core$Native_Scheduler.fail(
+            { ctor: "Error", _0: err.code, _1: err.message }
+          )
+        );
+
+      });
+    });
   }
 
   //
 
 
+  /* Note: no Fn(..) elm interop. These are meant to be used as helpers
+   * to other parts of the native bindings and not from elm itself.
+   */
   return {
     "databaseToModel": databaseToModel,
     "referenceToModel": referenceToModel,
     "snapshotToModel": snapshotToModel,
     "queryToModel": queryToModel,
     "sourceOnSnapshot": sourceOnSnapshot,
-    "sourceOffSnapshot": sourceOnSnapshot
+    "sourceOffSnapshot": sourceOffSnapshot,
+    "sourceOnceSnapshot": sourceOnceSnapshot
   }
 }()

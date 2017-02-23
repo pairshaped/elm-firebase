@@ -9,37 +9,8 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () {
   };
 
 
-  // Callback handlers
-
-
-  var wrapOnce = function (eventType, source) {
-    debug(".wrapOnce", eventType, source);
-
-    return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
-      source.once(eventType, function (snapshot) {
-        callback(
-          _elm_lang$core$Native_Scheduler.succeed(
-            _pairshaped$elm_firebase$Native_Shared.snapshotToModel(snapshot)
-          )
-        )
-
-      }, function (err) {
-        var ctor =
-          err.code
-          .split("/")[1]
-          .replace(/-([a-z])/g, function (char) { return char[1].toUpperCase(); })
-          .replace(/^([a-z])/, function (firstChar) { return firstChar.toUpperCase(); });
-
-        callback(
-          _elm_lang$core$Native_Scheduler.fail({ ctor: "Error", _0: err.code, _1: err.message })
-        )
-
-      })
-    })
-  }
-
-
   // Reference methods
+
 
   var child = function (path, refModel) {
     debug(".child", path, refModel);
@@ -134,7 +105,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () {
     debug(".once", eventType, refModel);
     var ref = refModel.reference();
 
-    return wrapOnce(eventType, ref);
+    return _pairshaped$elm_firebase$Native_Shared.sourceOnceSnapshot(eventType, ref);
   }
 
 
@@ -155,6 +126,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () {
 
 
   // Helpers
+
 
   return {
     "child": F2(child),

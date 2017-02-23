@@ -35,6 +35,21 @@ getPriority =
     Native.Database.Snapshot.getPriority
 
 
+hasChild : String -> Snapshot -> Bool
+hasChild =
+    Native.Database.Snapshot.hasChild
+
+
+hasChildren : Snapshot -> Bool
+hasChildren =
+    Native.Database.Snapshot.hasChildren
+
+
+numChildren : Snapshot -> Int
+numChildren =
+    Native.Database.Snapshot.numChildren
+
+
 value : Snapshot -> Json.Decode.Value
 value =
     Native.Database.Snapshot.value

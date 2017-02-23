@@ -171,15 +171,7 @@ update msg model =
                 )
 
         ToggleSubscription ->
-            ( { model
-                | subscription = not model.subscription
-                , test =
-                    (if model.subscription then
-                        Nothing
-                     else
-                        model.test
-                    )
-              }
+            ( { model | subscription = not model.subscription }
             , Cmd.none
             )
 

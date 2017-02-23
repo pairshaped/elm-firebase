@@ -16,34 +16,6 @@ var _pairshaped$elm_firebase$Native_Database_Query = function () {
   }
 
 
-  // Callback handlers
-
-
-  var wrapOnce = function (eventType, source) {
-    debug(".wrapOnce", eventType, source);
-
-    return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
-      source.once(eventType, function (snapshot) {
-        callback(
-          _elm_lang$core$Native_Scheduler.succeed(
-            _pairshaped$elm_firebase$Native_Shared.snapshotToModel(snapshot)
-          )
-        )
-
-      }, function (err) {
-        var ctor =
-          err.code
-          .split("/")[1]
-          .replace(/-([a-z])/g, function (char) { return char[1].toUpperCase(); })
-          .replace(/^([a-z])/, function (firstChar) { return firstChar.toUpperCase(); });
-
-        callback(_elm_lang$core$Native_Scheduler.fail({ ctor: "Error", _0: err.code, _1: err.message }))
-
-      })
-    })
-  }
-
-
   // Query methods
 
 
@@ -89,9 +61,7 @@ var _pairshaped$elm_firebase$Native_Database_Query = function () {
     debug(".limitToFirst", limit, queryModel);
     var query = queryModel.query();
 
-    return _pairshaped$elm_firebase$Native_Shared.queryToModel(
-      query.limitToFirst(limit)
-    );
+    return _pairshaped$elm_firebase$Native_Shared.queryToModel(query.limitToFirst(limit));
   }
 
 
@@ -99,9 +69,7 @@ var _pairshaped$elm_firebase$Native_Database_Query = function () {
     debug(".limitToLast", limit, queryModel);
     var query = queryModel.query();
 
-    return _pairshaped$elm_firebase$Native_Shared.queryToModel(
-      query.limitToLast(limit)
-    );
+    return _pairshaped$elm_firebase$Native_Shared.queryToModel(query.limitToLast(limit));
   }
 
 
@@ -109,7 +77,7 @@ var _pairshaped$elm_firebase$Native_Database_Query = function () {
     debug(".queryOnce", eventType, queryModel);
     var query = refModel.query();
 
-    return wrapOnce(eventType, query);
+    return _pairshaped$elm_firebase$Native_Shared.sourceOnceSnapshot(eventType, query);
   }
 
 
@@ -131,11 +99,13 @@ var _pairshaped$elm_firebase$Native_Database_Query = function () {
 
   // Helper
 
+
   var uuid = function (queryModel) {
     debug(".uuid", queryModel);
 
     return queryModel.uuid;
   }
+
 
   return {
     "ref": ref,

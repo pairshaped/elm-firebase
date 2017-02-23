@@ -58,6 +58,31 @@ var _pairshaped$elm_firebase$Native_Database_Snapshot = function () {
     return snapshot.getPriority();
   }
 
+
+  var hasChild = function (path, snapshotModel) {
+    debug(".hasChild", path, snapshotModel);
+    var snapshot = snapshotModel.snapshot();
+
+    return snapshot.hasChild(path);
+  }
+
+
+  var hasChildren = function (snapshotModel) {
+    debug(".hasChildren", snapshotModel);
+    var snapshot = snapshotModel.snapshot();
+
+    return snapshot.hasChildren();
+  }
+
+
+  var numChildren = function (snapshotModel) {
+    debug(".numChildren", snapshotModel);
+    var snapshot = snapshotModel.snapshot();
+
+    return snapshot.numChildren();
+  }
+
+
   var value = function (snapshotModel) {
     debug(".value", snapshotModel);
     var snapshot = snapshotModel.snapshot();
@@ -78,6 +103,9 @@ var _pairshaped$elm_firebase$Native_Database_Snapshot = function () {
     "exists": exists,
     "exportVal": exportVal,
     "getPriority": getPriority,
+    "hasChild": F2(hasChild),
+    "hasChildren": hasChildren,
+    "numChildren": numChildren,
     "value": value,
     "prevKey": prevKey
   }
