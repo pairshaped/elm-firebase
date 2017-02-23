@@ -70,9 +70,6 @@ subscribe event reference tagger =
 -- Effect manager
 
 
-type Tagger msg
-    = Result Firebase.Errors.Error Snapshot
-
 type MySub msg
     = MySub String Reference (Snapshot -> msg)
 
@@ -88,7 +85,7 @@ subMap func subMsg =
 
 
 type alias State msg =
-    { subs : List ( Process.Id, MySub msg )
+    { subs : List (MySub msg)
     }
 
 
@@ -101,12 +98,13 @@ init =
 
 type SelfMsg msg
     = ManageSubscriptions { toAdd : List (MySub msg), toRemove: List (MySub msg) }
-    -- | SubscribeTo (MySub msg)
-    -- | Update String Reference Snapshot
+    | Update (Snapshot -> msg) Snapshot
     -- | UnsubscribeTo (Mysub msg)
+
 
 (&>) t1 t2 =
     Task.andThen (\_ -> t2) t1
+
 
 onEffects :
   Platform.Router msg (SelfMsg msg)
@@ -115,19 +113,11 @@ onEffects :
   -> Task never (State msg)
 onEffects router newSubs oldState =
     let
-        _ = Debug.log "Reference.onEffects" (router, newSubs, oldState)
-
-
-        currentSubs : List (MySub msg)
-        currentSubs =
-            List.map Tuple.second oldState.subs
-
-
         toAdd : List (MySub msg)
         toAdd =
             let
                 notSubscribed (MySub newEvent newReference _) =
-                    currentSubs
+                    oldState.subs
                         |> List.filter (\(MySub event reference _) -> event == newEvent && (toString reference) == (toString newReference))
                         |> List.isEmpty
             in
@@ -135,68 +125,80 @@ onEffects router newSubs oldState =
                     |> List.filter notSubscribed
 
 
-        -- toRemove : List (MySub msg)
-        -- toRemove =
-        --     let
-        --         subscribed oldSub =
-        --             not (List.member oldSub newSubs)
-        --     in
-        --         currentSubs
-        --             |> List.filter subscribed
+        toRemove : List (MySub msg)
+        toRemove =
+            let
+                subscribed (MySub oldEvent oldReference _) =
+                    newSubs
+                        |> List.filter (\(MySub event reference _) -> event == oldEvent && (toString reference) == (toString oldReference))
+                        |> List.isEmpty
+            in
+                oldState.subs
+                    |> List.filter subscribed
     in
         Platform.sendToSelf
             router
-            (ManageSubscriptions { toAdd = toAdd, toRemove = [] })
-            &> Task.succeed oldState
+            (ManageSubscriptions { toAdd = toAdd, toRemove = toRemove })
+            &> Task.succeed { oldState | subs = newSubs }
 
 
 onSelfMsg : Platform.Router msg (SelfMsg msg) -> (SelfMsg msg) -> State msg -> Task Never (State msg)
 onSelfMsg router selfMsg oldState =
-    let
-        _ = Debug.log "Reference.onSelfMsg" (router, selfMsg, oldState)
-    in
-        case selfMsg of
-            ManageSubscriptions { toAdd, toRemove } ->
-                let
-                    addSubscription : MySub msg -> Task x (State msg) -> Task x (State msg)
-                    addSubscription mySub lastTask =
-                        let
-                            _ = Debug.log "addSubscription" mySub
+    case (Debug.log "onSelfMsg" selfMsg) of
+        ManageSubscriptions { toAdd, toRemove } ->
+            let
+                addAll : Task x (State msg) -> Task x (State msg)
+                addAll initialState =
+                    List.foldl
+                        addSubscription
+                        initialState
+                        toAdd
 
-                            nativeTask event reference tagger =
-                                let
-                                    listen : Task Error Snapshot -> Task Error Snapshot
-                                    listen prev =
-                                      Task.andThen (\snapshot -> Platform.sendToApp router (tagger snapshot)) prev
-                                        |> Debug.log "nativeTask.listen"
-                                        |> Process.sleep 1
-                                        |> listen
-                                in
-                                    Native.Database.Reference.on event reference
-                                        |> Task.andThen (\snapshot -> Platform.sendToApp router (tagger snapshot))
-                                        |> listen
+                addSubscription : MySub msg -> Task x (State msg) -> Task x (State msg)
+                addSubscription mySub lastTask =
+                    let
+                        _ = Debug.log "addSubscription" mySub
 
-                            insertProcess state pid =
-                                let
-                                    pidSub : ( Process.Id, MySub msg )
-                                    pidSub =
-                                        ( pid, mySub )
-                                            |> Debug.log "pidSub"
-                                in
-                                    List.append state.subs [pidSub]
-                        in
-                            case mySub of
-                                MySub event reference tagger ->
-                                    Task.map2
-                                        (\pid state -> { state | subs = insertProcess state pid })
-                                        (Process.spawn (nativeTask event reference tagger))
-                                        lastTask
+                        nativeTask : String -> Reference -> (Snapshot -> msg) -> Task x ()
+                        nativeTask event reference tagger =
+                            Native.Database.Reference.on
+                                event
+                                reference
+                                (\snapshot -> Platform.sendToSelf router (Update tagger snapshot))
 
-                    addAll : Task x (State msg) -> Task x (State msg)
-                    addAll initialState =
-                        List.foldl
-                            addSubscription
-                            initialState
-                            toAdd
-                in
-                    addAll (Task.succeed oldState)
+                    in
+                        case mySub of
+                            MySub event reference tagger ->
+                                (nativeTask event reference tagger)
+                                    &> lastTask
+
+                removeAll : Task x (State msg) -> Task x (State msg)
+                removeAll initialState =
+                    List.foldl
+                        removeSubscription
+                        initialState
+                        toRemove
+
+                removeSubscription : MySub msg -> Task x (State msg) -> Task x (State msg)
+                removeSubscription mySub lastTask =
+                  case mySub of
+                      MySub event reference tagger ->
+                          let
+                              _ = Debug.log "removeSubscription" mySub
+
+                              nativeTask : String -> Reference -> Task x ()
+                              nativeTask event reference =
+                                  Native.Database.Reference.off
+                                      event
+                                      reference
+                          in
+                              (nativeTask event reference)
+                                  &> lastTask
+            in
+                (Task.succeed oldState)
+                  |> removeAll
+                  |> addAll
+
+        Update tagger snapshot ->
+            Platform.sendToApp router (tagger snapshot)
+                &> Task.succeed oldState

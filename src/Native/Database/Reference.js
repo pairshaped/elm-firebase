@@ -72,28 +72,28 @@ var _mrozbarry$elm_firebase$Native_Database_Reference = function () {
   }
 
 
-  var onCallback = function (eventType, reference, nativeCallback, snapshot, prevKey) {
-    debug(".onCallback", { eventType, reference, nativeCallback, snapshot, prevKey })
-    return nativeCallback(
-      _elm_lang$core$Native_Scheduler.succeed(snapshotToModel(snapshot, prevKey))
-    )
+  var onCallback = function (tagger, snapshot, prevKey) {
+    debug(".onCallback", { tagger, snapshot, prevKey })
+    _elm_lang$core$Native_Scheduler.rawSpawn(tagger(snapshotToModel(snapshot, prevKey)))
   }
 
 
-  var wrapOn = function (eventType, source) {
-    debug(".wrapOn", eventType, source);
+  var wrapOn = function (eventType, source, tagger) {
+    debug(".wrapOn", { eventType, source, tagger })
 
     return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
-      source.on(eventType, onCallback.bind(window, eventType, source, callback));
+      var cb = source.on(eventType, onCallback.bind(window, tagger));
+      callback(_elm_lang$core$Native_Scheduler.succeed({ ctor: '_Tuple0' }))
     })
   }
 
 
-  var wrapOff = function (eventType, source) {
+  var wrapOff = function (eventType, source, tagger) {
     debug(".wrapOff", eventType, source);
 
     return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
-      source.off(eventType, onCallbackWithPrevKey)
+      source.off(eventType, onCallback.bind(window, null))
+      callback(_elm_lang$core$Native_Scheduler.succeed({ ctor: '_Tuple0' }))
     })
   }
 
@@ -189,11 +189,11 @@ var _mrozbarry$elm_firebase$Native_Database_Reference = function () {
   }
 
 
-  var on = function (eventType, refModel) {
-    debug(".on", eventType, refModel);
+  var on = function (eventType, refModel, tagger) {
+    debug(".on", { eventType, refModel, tagger })
     var ref = refModel.reference();
 
-    return wrapOn(eventType, ref);
+    return wrapOn(eventType, ref, tagger);
   }
 
 
@@ -216,7 +216,7 @@ var _mrozbarry$elm_firebase$Native_Database_Reference = function () {
     "orderByValue": orderByValue,
     "toString" : toString,
     "once" : F2(once),
-    "on" : F2(on),
+    "on" : F3(on),
     "off" : F2(off)
   }
 }()
