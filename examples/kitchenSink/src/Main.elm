@@ -3,11 +3,13 @@ import Html.Events exposing (onClick)
 import Html.Attributes exposing (value)
 import Task exposing (Task)
 import Json.Decode
+import Dict exposing (Dict)
 import Firebase
 import Firebase.Database
+import Firebase.Database.Query
 import Firebase.Database.Reference
 import Firebase.Database.Snapshot
-import Firebase.Database.Types exposing (Reference, Snapshot)
+import Firebase.Database.Types exposing (Database, Query, Reference, Snapshot)
 
 
 -- Entry Point
@@ -18,18 +20,19 @@ main =
         subscriptions : Model -> Sub Msg
         subscriptions model =
             let
-                ref : Reference
-                ref =
-                    model.app
-                        |> Firebase.Database.init
-                        |> Firebase.Database.ref (Just "subscriptionTest")
+                subscribeToReference : List (Sub Msg)
+                subscribeToReference =
+                    if model.subscription then
+                        [ Firebase.Database.Reference.on "value" model.subRef SubscriptionChange ]
+                    else
+                        []
+
+                subscribeToQuery : List (Sub Msg)
+                subscribeToQuery =
+                    [ Firebase.Database.Query.on "value" model.subQuery CollectionQuery ]
             in
-                if model.subscription then
-                    Sub.batch
-                        [ Firebase.Database.Reference.on "value" ref SubscriptionChange
-                        ]
-                else
-                    Sub.none
+                Sub.batch
+                    (List.append subscribeToReference subscribeToQuery)
     in
         Html.programWithFlags
             { init = init
@@ -46,7 +49,10 @@ type alias Model =
     { app : Firebase.App
     , demo : Maybe String
     , test : Maybe { foo : String }
+    , collection : Maybe (Dict String Int)
     , subscription : Bool
+    , subRef : Reference
+    , subQuery : Query
     }
 
 
@@ -61,11 +67,35 @@ type alias Flags =
 
 initialModel : Flags -> Model
 initialModel firebaseConfig  =
-    { app = Firebase.init firebaseConfig
-    , demo = Nothing
-    , test = Nothing
-    , subscription = False
-    }
+    let
+        app : Firebase.App
+        app = Firebase.init firebaseConfig
+
+        database : Database
+        database =
+            app
+                |> Firebase.Database.init
+
+        subRef : Reference
+        subRef =
+            database
+                |> Firebase.Database.ref (Just "subscriptionTest")
+
+        subQuery : Query
+        subQuery =
+            database
+                |> Firebase.Database.ref (Just "collection")
+                |> Firebase.Database.Reference.orderByValue
+                |> Firebase.Database.Query.limitToLast 3
+    in
+        { app = app
+        , demo = Nothing
+        , test = Nothing
+        , collection = Nothing
+        , subscription = True
+        , subRef = subRef
+        , subQuery = subQuery
+        }
 
 
 init : Flags -> ( Model, Cmd Msg )
@@ -94,6 +124,7 @@ type Msg
     = ReadDemo Snapshot
     | SubscriptionChange Snapshot
     | ToggleSubscription
+    | CollectionQuery Snapshot
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -144,6 +175,23 @@ update msg model =
             , Cmd.none
             )
 
+        CollectionQuery snapshot ->
+            let
+                value : Maybe (Dict String Int)
+                value =
+                    let
+                        decoder =
+                            (Json.Decode.dict Json.Decode.int)
+                    in
+                        snapshot
+                            |> Firebase.Database.Snapshot.value
+                            |> Json.Decode.decodeValue decoder
+                            |> Result.toMaybe
+            in
+                ( { model | collection = value }
+                , Cmd.none
+                )
+
 
 -- View
 
@@ -156,11 +204,12 @@ view model =
         , div [] [ text ("App.name = " ++ (Firebase.name model.app)) ]
         , div [] [ text ("App.options = " ++ (toString (Firebase.options model.app))) ]
         , div [] [ text ("Number of firebase apps = " ++ (toString <| List.length (Firebase.apps ()))) ]
-        , div [] [ text ("Demo value = " ++ (toString model.demo))]
-        , div [] [ text ("Subscription value = " ++ (toString model.test))]
+        , div [] [ text ("Demo value = " ++ (toString model.demo)) ]
+        , div [] [ text ("Subscription value = " ++ (toString model.test)) ]
         , button
             [ onClick ToggleSubscription
             ]
             [ text ("Turn subscription " ++ (if model.subscription then "Off" else "On"))
             ]
+        , div [] [ text ("Collection query = " ++ (toString model.collection)) ]
         ]

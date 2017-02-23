@@ -23,6 +23,7 @@ module Firebase exposing
 -}
 
 import Native.Firebase
+import Native.Shared
 
 
 -- Model
