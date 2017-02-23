@@ -53,7 +53,7 @@ var _pairshaped$elm_firebase$Native_Authentication = function () {
     debug(".init", appModel);
     var app = appModel.app();
 
-    return firebase.auth(app);
+    return authToModel(firebase.auth(app));
   }
 
 
@@ -173,14 +173,14 @@ var _pairshaped$elm_firebase$Native_Authentication = function () {
   }
 
 
-  var signOut = function (email, password, authModel) {
-    debug(".signOut", email, password, authModel);
+  var signOut = function (authModel) {
+    debug(".signOut", authModel);
     var auth = authModel.auth();
 
     return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
       auth.signOut()
         .then(function () {
-          _elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" })
+          callback(_elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" }))
         })
     });
   }
