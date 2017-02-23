@@ -7,7 +7,15 @@
     "source-directories": [
         "src"
     ],
-    "exposed-modules": [],
+    "exposed-modules": [
+      "Firebase",
+      "Firebase.Errors",
+      "Firebase.Database",
+      "Firebase.Database.Query",
+      "Firebase.Database.Reference",
+      "Firebase.Database.Snapshot",
+      "Firebase.Database.Types"
+    ],
     "dependencies": {
         "elm-lang/core": "5.1.1 <= v < 6.0.0"
     },
