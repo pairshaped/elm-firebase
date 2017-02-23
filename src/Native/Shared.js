@@ -1,13 +1,4 @@
 function elmFirebaseOnSnapshot (tagger, snapshot, prevKey) {
-  console.debug(
-    "Native.Firebase.Shared.elmFirebaseOnSnapshot",
-    {
-      tagger: tagger,
-      snapshot: snapshot,
-      prevKey: prevKey
-    }
-  )
-
   _elm_lang$core$Native_Scheduler.rawSpawn(
     tagger(
       _pairshaped$elm_firebase$Native_Shared.snapshotToModel(snapshot, prevKey)

@@ -117,7 +117,6 @@ var _pairshaped$elm_firebase$Native_Database_Query = function () {
     debug(".on", eventType, queryModel, tagger);
     var query = queryModel.query();
 
-    //return wrapOn(eventType, query, tagger);
     return _pairshaped$elm_firebase$Native_Shared.sourceOnSnapshot(eventType, query, tagger);
   }
 
@@ -126,7 +125,6 @@ var _pairshaped$elm_firebase$Native_Database_Query = function () {
     debug(".off", eventType, queryModel);
     var query = refModel.query();
 
-    //return wrapOff(eventType, query);
     return _pairshaped$elm_firebase$Native_Shared.sourceOffSnapshot(eventType, query);
   }
 

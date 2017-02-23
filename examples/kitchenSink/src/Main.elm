@@ -1,3 +1,5 @@
+module Main exposing (..)
+
 import Html exposing (Html, div, text, button)
 import Html.Events exposing (onClick)
 import Html.Attributes exposing (value)
@@ -42,6 +44,7 @@ main =
             }
 
 
+
 -- Model
 
 
@@ -66,10 +69,11 @@ type alias Flags =
 
 
 initialModel : Flags -> Model
-initialModel firebaseConfig  =
+initialModel firebaseConfig =
     let
         app : Firebase.App
-        app = Firebase.init firebaseConfig
+        app =
+            Firebase.init firebaseConfig
 
         database : Database
         database =
@@ -135,10 +139,10 @@ update msg model =
                 demo : Maybe String
                 demo =
                     snapshot
-                      |> Firebase.Database.Snapshot.value
-                      |> Json.Decode.decodeValue (Json.Decode.string)
-                      |> Result.withDefault ""
-                      |> Just
+                        |> Firebase.Database.Snapshot.value
+                        |> Json.Decode.decodeValue (Json.Decode.string)
+                        |> Result.withDefault ""
+                        |> Just
             in
                 ( { model | demo = demo }
                 , Cmd.none
@@ -161,7 +165,6 @@ update msg model =
                             |> Firebase.Database.Snapshot.value
                             |> Json.Decode.decodeValue decoder
                             |> Result.toMaybe
-
             in
                 ( { model | test = value }
                 , Cmd.none
@@ -169,8 +172,13 @@ update msg model =
 
         ToggleSubscription ->
             ( { model
-              | subscription = not model.subscription
-              , test = (if model.subscription then Nothing else model.test)
+                | subscription = not model.subscription
+                , test =
+                    (if model.subscription then
+                        Nothing
+                     else
+                        model.test
+                    )
               }
             , Cmd.none
             )
@@ -193,6 +201,7 @@ update msg model =
                 )
 
 
+
 -- View
 
 
@@ -209,7 +218,14 @@ view model =
         , button
             [ onClick ToggleSubscription
             ]
-            [ text ("Turn subscription " ++ (if model.subscription then "Off" else "On"))
+            [ text
+                ("Turn subscription "
+                    ++ (if model.subscription then
+                            "Off"
+                        else
+                            "On"
+                       )
+                )
             ]
         , div [] [ text ("Collection query = " ++ (toString model.collection)) ]
         ]

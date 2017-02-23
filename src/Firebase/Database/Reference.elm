@@ -1,7 +1,5 @@
 effect module Firebase.Database.Reference
-    where
-        { subscription = MySub
-        }
+    where { subscription = MySub }
     exposing
         ( child
         , set
@@ -22,46 +20,55 @@ import Firebase.Errors exposing (Error)
 import Native.Database.Reference
 
 
-
 child : String -> Reference -> Reference
-child = Native.Database.Reference.child
+child =
+    Native.Database.Reference.child
 
 
 set : Json.Encode.Value -> msg -> Reference -> Task x x
-set = Native.Database.Reference.set
+set =
+    Native.Database.Reference.set
 
 
 update : Json.Encode.Value -> msg -> Reference -> Task x x
-update = Native.Database.Reference.update
+update =
+    Native.Database.Reference.update
 
 
 orderByChild : String -> Reference -> Query
-orderByChild = Native.Database.Reference.orderByChild
+orderByChild =
+    Native.Database.Reference.orderByChild
 
 
 orderByKey : Reference -> Query
-orderByKey = Native.Database.Reference.orderByKey
+orderByKey =
+    Native.Database.Reference.orderByKey
 
 
 orderByPriority : Reference -> Query
-orderByPriority = Native.Database.Reference.orderByPriority
+orderByPriority =
+    Native.Database.Reference.orderByPriority
 
 
 orderByValue : Reference -> Query
-orderByValue = Native.Database.Reference.orderByValue
+orderByValue =
+    Native.Database.Reference.orderByValue
 
 
 toString : Reference -> String
-toString = Native.Database.Reference.toString
+toString =
+    Native.Database.Reference.toString
 
 
 once : String -> Reference -> Task x Snapshot
-once = Native.Database.Reference.once
+once =
+    Native.Database.Reference.once
 
 
 on : String -> Reference -> (Snapshot -> msg) -> Sub msg
 on event reference tagger =
     subscription (MySub event reference tagger)
+
 
 
 -- Effect manager
@@ -71,12 +78,16 @@ type MySub msg
     = MySub String Reference (Snapshot -> msg)
 
 
+
 -- TODO: What/how does this work.
+
+
 subMap : (a -> b) -> MySub a -> MySub b
 subMap func subMsg =
     case subMsg of
         MySub event ref tagger ->
             MySub event ref (tagger >> func)
+
 
 
 -- Effect management/State
@@ -95,20 +106,23 @@ init =
 
 
 type SelfMsg msg
-    = ManageSubscriptions { toAdd : List (MySub msg), toRemove: List (MySub msg) }
+    = ManageSubscriptions { toAdd : List (MySub msg), toRemove : List (MySub msg) }
     | Update (Snapshot -> msg) Snapshot
 
 
+
 -- Do task 1, discard it's return value, then do task 2
+
+
 (&>) t1 t2 =
     Task.andThen (\_ -> t2) t1
 
 
 onEffects :
-  Platform.Router msg (SelfMsg msg)
-  -> List (MySub msg)
-  -> State msg
-  -> Task never (State msg)
+    Platform.Router msg (SelfMsg msg)
+    -> List (MySub msg)
+    -> State msg
+    -> Task never (State msg)
 onEffects router newSubs oldState =
     let
         toAdd : List (MySub msg)
@@ -121,7 +135,6 @@ onEffects router newSubs oldState =
             in
                 newSubs
                     |> List.filter notSubscribed
-
 
         toRemove : List (MySub msg)
         toRemove =
@@ -140,7 +153,7 @@ onEffects router newSubs oldState =
             &> Task.succeed { oldState | subs = newSubs }
 
 
-onSelfMsg : Platform.Router msg (SelfMsg msg) -> (SelfMsg msg) -> State msg -> Task x (State msg)
+onSelfMsg : Platform.Router msg (SelfMsg msg) -> SelfMsg msg -> State msg -> Task x (State msg)
 onSelfMsg router selfMsg oldState =
     case selfMsg of
         ManageSubscriptions { toAdd, toRemove } ->
@@ -161,7 +174,6 @@ onSelfMsg router selfMsg oldState =
                                 event
                                 reference
                                 (\snapshot -> Platform.sendToSelf router (Update tagger snapshot))
-
                     in
                         case mySub of
                             MySub event reference tagger ->
@@ -177,21 +189,21 @@ onSelfMsg router selfMsg oldState =
 
                 removeSubscription : MySub msg -> Task x (State msg) -> Task x (State msg)
                 removeSubscription mySub lastTask =
-                  case mySub of
-                      MySub event reference tagger ->
-                          let
-                              nativeTask : String -> Reference -> Task x ()
-                              nativeTask event reference =
-                                  Native.Database.Reference.off
-                                      event
-                                      reference
-                          in
-                              (nativeTask event reference)
-                                  &> lastTask
+                    case mySub of
+                        MySub event reference tagger ->
+                            let
+                                nativeTask : String -> Reference -> Task x ()
+                                nativeTask event reference =
+                                    Native.Database.Reference.off
+                                        event
+                                        reference
+                            in
+                                (nativeTask event reference)
+                                    &> lastTask
             in
                 (Task.succeed oldState)
-                  |> removeAll
-                  |> addAll
+                    |> removeAll
+                    |> addAll
 
         Update tagger snapshot ->
             Platform.sendToApp router (tagger snapshot)
