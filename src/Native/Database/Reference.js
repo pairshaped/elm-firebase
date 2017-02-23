@@ -9,43 +9,6 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () {
   };
 
 
-  var referenceToModel = function (reference) {
-    var getReference = function () {
-      return reference;
-    };
-
-    return {
-      ctor: "Reference",
-      reference : getReference
-    };
-  };
-
-
-  var snapshotToModel = function (snapshot, prevKey) {
-    var getDataSnapshot = function () {
-      return snapshot;
-    };
-
-    return {
-      ctor: "Snapshot",
-      snapshot: getDataSnapshot,
-      prevKey: prevKey ? { ctor: "Just", _0: prevKey } : { ctor: "Nothing" }
-    };
-  };
-
-
-  var queryToModel = function (query) {
-    var getQuery = function () {
-      return query;
-    };
-
-    return {
-      ctor: "Query",
-      query: getQuery
-    };
-  };
-
-
   // Callback handlers
 
 
@@ -54,7 +17,11 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () {
 
     return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
       source.once(eventType, function (snapshot) {
-        callback(_elm_lang$core$Native_Scheduler.succeed(snapshotToModel(snapshot)))
+        callback(
+          _elm_lang$core$Native_Scheduler.succeed(
+            _pairshaped$elm_firebase$Native_Shared.snapshotToModel(snapshot)
+          )
+        )
 
       }, function (err) {
         var ctor =
@@ -63,36 +30,11 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () {
           .replace(/-([a-z])/g, function (char) { return char[1].toUpperCase(); })
           .replace(/^([a-z])/, function (firstChar) { return firstChar.toUpperCase(); });
 
-        callback(_elm_lang$core$Native_Scheduler.fail({ ctor: "Error", _0: err.code, _1: err.message }))
+        callback(
+          _elm_lang$core$Native_Scheduler.fail({ ctor: "Error", _0: err.code, _1: err.message })
+        )
 
       })
-    })
-  }
-
-
-  var onCallback = function (tagger, snapshot, prevKey) {
-    debug(".onCallback", tagger, snapshot, prevKey)
-    _elm_lang$core$Native_Scheduler.rawSpawn(tagger(snapshotToModel(snapshot, prevKey)))
-  }
-
-
-  var wrapOn = function (eventType, source, tagger) {
-    debug(".wrapOn", eventType, source, tagger)
-
-    return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
-      source.on(eventType, onCallback.bind(window, tagger));
-
-      callback(_elm_lang$core$Native_Scheduler.succeed({ ctor: '_Tuple0' }))
-    })
-  }
-
-
-  var wrapOff = function (eventType, source, tagger) {
-    debug(".wrapOff", eventType, source);
-
-    return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
-      source.off(eventType, onCallback.bind(window, null))
-      callback(_elm_lang$core$Native_Scheduler.succeed({ ctor: '_Tuple0' }))
     })
   }
 
@@ -103,7 +45,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () {
     debug(".child", path, refModel);
     var reference = refModel.reference().child(path);
 
-    return referenceToModel(reference);
+    return _pairshaped$elm_firebase$Native_Shared.referenceToModel(reference);
   };
 
 
@@ -112,7 +54,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () {
 
     return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
       refModel.reference().set(json, function () {
-        _elm_lang$core$Native_Scheduler.succeed([])
+        _elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" })
       })
     })
   };
@@ -123,7 +65,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () {
 
     return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
       refModel.reference().update(json, function () {
-        _elm_lang$core$Native_Scheduler.succeed([])
+        _elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" })
       })
     })
   };
@@ -144,7 +86,9 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () {
     debug(".orderByChild", order, refModel);
     var ref = refModel.reference();
 
-    return queryToModel(ref.orderByChild(path));
+    return _pairshaped$elm_firebase$Native_Shared.queryToModel(
+      ref.orderByChild(path)
+    );
   }
 
 
@@ -152,7 +96,9 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () {
     debug(".orderByKey", refModel);
     var ref = refModel.reference();
 
-    return queryToModel(ref.orderByKey());
+    return _pairshaped$elm_firebase$Native_Shared.queryToModel(
+      ref.orderByKey()
+    );
   }
 
 
@@ -160,7 +106,9 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () {
     debug(".orderByPriority", refModel);
     var ref = refModel.reference();
 
-    return queryToModel(ref.orderByPriority());
+    return _pairshaped$elm_firebase$Native_Shared.queryToModel(
+      ref.orderByPriority()
+    );
   }
 
 
@@ -168,7 +116,9 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () {
     debug(".orderByValue", refModel);
     var ref = refModel.reference();
 
-    return queryToModel(ref.orderByValue());
+    return _pairshaped$elm_firebase$Native_Shared.queryToModel(
+      ref.orderByValue()
+    );
   };
 
 
@@ -192,7 +142,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () {
     debug(".on", eventType, refModel, tagger)
     var ref = refModel.reference();
 
-    return wrapOn(eventType, ref, tagger);
+    return _pairshaped$elm_firebase$Native_Shared.sourceOnSnapshot(eventType, ref, tagger);
   }
 
 
@@ -200,9 +150,11 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () {
     debug(".off", eventType, refModel);
     var ref = refModel.reference();
 
-    return wrapOff(eventType, ref);
+    return _pairshaped$elm_firebase$Native_Shared.sourceOffSnapshot(eventType, ref);
   }
 
+
+  // Helpers
 
   return {
     "child": F2(child),

@@ -8,32 +8,8 @@ var _pairshaped$elm_firebase$Native_Database_Snapshot = function () {
     // console.log.apply(console, args);
   };
 
-  var referenceToModel = function (reference) {
-    var getReference = function () {
-      return reference;
-    };
 
-    return {
-      ctor: "Reference",
-      reference : getReference
-    };
-  };
-
-
-  var snapshotToModel = function (snapshot, prevKey) {
-    var getDataSnapshot = function () {
-      return snapshot;
-    };
-
-    return {
-      ctor: "Snapshot",
-      snapshot: getDataSnapshot,
-      prevKey: prevKey ? { ctor: "Just", _0: prevKey } : { ctor: "Nothing" }
-    };
-  };
-
-
-  //
+  // Snapshot methods
 
 
   var key = function (snapshotModel) {
@@ -49,14 +25,14 @@ var _pairshaped$elm_firebase$Native_Database_Snapshot = function () {
     debug(".ref", snapshotModel);
     var snapshot = snapshotModel.snapshot();
 
-    return referenceToModel(snapshot.ref);
+    return _pairshaped$elm_firebase$Native_Shared.referenceToModel(snapshot.ref);
   }
 
   var child = function (path, snapshotModel) {
     debug(".child", path, snapshotModel);
     var snapshot = snapshotModel.snapshot();
 
-    return snapshotToModel(snapshot.child(path));
+    return _pairshaped$elm_firebase$Native_Shared.snapshotToModel(snapshot.child(path));
   }
 
   var exists = function (snapshotModel) {
