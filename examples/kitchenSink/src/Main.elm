@@ -1,20 +1,42 @@
-import Html exposing (Html, div, text)
+import Html exposing (Html, div, text, button)
+import Html.Events exposing (onClick)
+import Html.Attributes exposing (value)
 import Task exposing (Task)
 import Json.Decode
 import Firebase
-import Firebase.Database exposing (Reference, Snapshot, Event(Value))
+import Firebase.Database
+import Firebase.Database.Reference
+import Firebase.Database.Snapshot
+import Firebase.Database.Types exposing (Reference, Snapshot)
 
 
 -- Entry Point
 
 
 main =
-    Html.programWithFlags
-        { init = init
-        , update = update
-        , subscriptions = \(model) -> Sub.none
-        , view = view
-        }
+    let
+        subscriptions : Model -> Sub Msg
+        subscriptions model =
+            let
+                ref : Reference
+                ref =
+                    model.app
+                        |> Firebase.Database.init
+                        |> Firebase.Database.ref (Just "subscriptionTest")
+            in
+                if model.subscription then
+                    Sub.batch
+                        [ Firebase.Database.Reference.subscribe "value" ref SubscriptionChange
+                        ]
+                else
+                    Sub.none
+    in
+        Html.programWithFlags
+            { init = init
+            , update = update
+            , subscriptions = subscriptions
+            , view = view
+            }
 
 
 -- Model
@@ -23,7 +45,10 @@ main =
 type alias Model =
     { app : Firebase.App
     , demo : Maybe String
+    , test : Maybe { foo : String }
+    , subscription : Bool
     }
+
 
 type alias Flags =
     { apiKey : String
@@ -38,6 +63,8 @@ initialModel : Flags -> Model
 initialModel firebaseConfig  =
     { app = Firebase.init (Debug.log "initialModel.config" firebaseConfig)
     , demo = Nothing
+    , test = Nothing
+    , subscription = False
     }
 
 
@@ -51,11 +78,11 @@ init flags =
         ref : Reference
         ref =
             model.app
-                |> Firebase.Database.database
+                |> Firebase.Database.init
                 |> Firebase.Database.ref (Just "demo")
     in
         ( model
-        , Task.perform ReadDemo (Firebase.Database.referenceOnce Value ref)
+        , Task.perform ReadDemo (Firebase.Database.Reference.once "value" ref)
         )
 
 
@@ -65,6 +92,8 @@ init flags =
 
 type Msg
     = ReadDemo Snapshot
+    | SubscriptionChange Snapshot
+    | ToggleSubscription
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -75,7 +104,7 @@ update msg model =
                 demo : Maybe String
                 demo =
                     snapshot
-                      |> Firebase.Database.snapshotValue
+                      |> Firebase.Database.Snapshot.value
                       |> Json.Decode.decodeValue (Json.Decode.string)
                       |> Result.withDefault ""
                       |> Just
@@ -85,6 +114,19 @@ update msg model =
                 , Cmd.none
                 )
 
+        SubscriptionChange snapshot ->
+            let
+                _ = Debug.log "SubscriptionChange" snapshot
+
+            in
+                ( model
+                , Cmd.none
+                )
+
+        ToggleSubscription ->
+            ( { model | subscription = not model.subscription }
+            , Cmd.none
+            )
 
 
 -- View
@@ -99,4 +141,10 @@ view model =
         , div [] [ text ("App.options = " ++ (toString (Firebase.options model.app))) ]
         , div [] [ text ("Number of firebase apps = " ++ (toString <| List.length (Firebase.apps ()))) ]
         , div [] [ text ("Demo value = " ++ (toString model.demo))]
+        , div [] [ text ("Subscription value = " ++ (toString model.test))]
+        , button
+            [ onClick ToggleSubscription
+            ]
+            [ text ("Turn subscription " ++ (if model.subscription then "Off" else "On"))
+            ]
         ]
