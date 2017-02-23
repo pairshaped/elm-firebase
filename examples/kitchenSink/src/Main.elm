@@ -118,13 +118,32 @@ update msg model =
             let
                 _ = Debug.log "SubscriptionChange" snapshot
 
+                value : Maybe { foo : String }
+                value =
+                    let
+                        decoder =
+                            Json.Decode.map
+                                assembleFooObj
+                                (Json.Decode.field "foo" Json.Decode.string)
+
+                        assembleFooObj foo =
+                            { foo = foo }
+                    in
+                        snapshot
+                            |> Firebase.Database.Snapshot.value
+                            |> Json.Decode.decodeValue decoder
+                            |> Result.toMaybe
+
             in
-                ( model
+                ( { model | test = value }
                 , Cmd.none
                 )
 
         ToggleSubscription ->
-            ( { model | subscription = not model.subscription }
+            ( { model
+              | subscription = not model.subscription
+              , test = (if model.subscription then Nothing else model.test)
+              }
             , Cmd.none
             )
 
