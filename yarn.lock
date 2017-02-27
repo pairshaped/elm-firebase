@@ -327,17 +327,11 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
-debug@2.2.0, debug@~2.2.0:
+debug@2.2.0, debug@^2.1.1, debug@~2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.2.0.tgz#f87057e995b1a1f6ae6a4960664137bc56f039da"
   dependencies:
     ms "0.7.1"
-
-debug@^2.1.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.1.tgz#79855090ba2c4e3115cc7d8769491d58f0491351"
-  dependencies:
-    ms "0.7.2"
 
 deep-extend@~0.4.0:
   version "0.4.1"
@@ -471,7 +465,7 @@ escope@^3.6.0:
     esrecurse "^4.1.0"
     estraverse "^4.1.1"
 
-eslint:
+eslint@^3.16.1:
   version "3.16.1"
   resolved "https://registry.yarnpkg.com/eslint/-/eslint-3.16.1.tgz#9bc31fc7341692cf772e80607508f67d711c5609"
   dependencies:
@@ -664,8 +658,8 @@ firebase@^3.6.10:
     xmlhttprequest "1.8.0"
 
 firstline@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/firstline/-/firstline-1.2.0.tgz#c9f4886e7f7fbf0afc12d71941dce06b192aea05"
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/firstline/-/firstline-1.2.1.tgz#b88673c42009f8821fac2926e99720acee924fae"
 
 flat-cache@^1.2.1:
   version "1.2.2"
@@ -1152,11 +1146,11 @@ lodash@3.10.1:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
 
-lodash@4.13.1, lodash@^4.0.0:
+lodash@4.13.1:
   version "4.13.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.13.1.tgz#83e4b10913f48496d4d16fec4a560af2ee744b68"
 
-lodash@4.14.2, lodash@^4.3.0:
+lodash@4.14.2, lodash@^4.0.0, lodash@^4.3.0:
   version "4.14.2"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.14.2.tgz#bbccce6373a400fbfd0a8c67ca42f6d1ef416432"
 
@@ -1219,13 +1213,9 @@ moment@2.x.x:
   version "2.17.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.17.1.tgz#fed9506063f36b10f066c8b59a144d7faebe1d82"
 
-ms@0.7.1:
+ms@0.7.1, ms@^0.7.1:
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/ms/-/ms-0.7.1.tgz#9cd13c03adbff25b65effde7ce864ee952017098"
-
-ms@0.7.2, ms@^0.7.1:
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/ms/-/ms-0.7.2.tgz#ae25cf2512b3885a1d95d7f037868d8431124765"
 
 mute-stream@0.0.5:
   version "0.0.5"
@@ -1360,6 +1350,10 @@ path-is-absolute@^1.0.0:
 path-is-inside@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/path-is-inside/-/path-is-inside-1.0.2.tgz#365417dede44430d1c11af61027facf074bdfc53"
+
+path-parse@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/path-parse/-/path-parse-1.0.5.tgz#3c1adf871ea9cd6c9431b6ea2bd74a0ff055c4c1"
 
 pify@^2.0.0:
   version "2.3.0"
@@ -1526,8 +1520,10 @@ resolve-from@^1.0.0:
   resolved "https://registry.yarnpkg.com/resolve-from/-/resolve-from-1.0.1.tgz#26cbfe935d1aeeeabb29bc3fe5aeb01e93d44226"
 
 resolve@^1.1.6:
-  version "1.1.7"
-  resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.1.7.tgz#203114d82ad2c5ed9e8e0411b3932875e889e97b"
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.3.2.tgz#1f0442c9e0cbb8136e87b9305f932f46c7f28235"
+  dependencies:
+    path-parse "^1.0.5"
 
 restore-cursor@^1.0.1:
   version "1.0.1"

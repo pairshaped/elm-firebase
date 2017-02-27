@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "eslint": "./node_modules/.bin/eslint --fix ./src/Native/**/*.js",
-    "test": "./node_modules/elm-test/bin/elm-test"
+    "test": "./node_modules/elm-test/bin/elm-test",
+    "firebaseServer": "./node_modules/firebase-server/bin/firebase-server"
   },
   "repository": {
     "type": "git",
@@ -23,11 +24,11 @@
   },
   "homepage": "https://github.com/pairshaped/elm-firebase#readme",
   "devDependencies": {
-    "eslint": "^3.16.1"
-  },
-  "dependencies": {
+    "eslint": "^3.16.1",
     "elm-test": "^0.18.2",
     "firebase": "^3.6.10",
     "firebase-server": "^0.9.1"
+  },
+  "dependencies": {
   }
 }
