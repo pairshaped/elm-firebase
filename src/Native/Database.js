@@ -21,22 +21,10 @@ var _pairshaped$elm_firebase$Native_Database = function () {
   };
 
 
-  var referenceToModel = function (reference) {
-    var getReference = function () {
-      return reference;
-    };
-
-    return {
-      ctor: "Reference",
-      reference : getReference
-    };
-  };
-
-
   var maybeWithDefault = function (fallback, maybe) {
     return maybe.ctor == "Nothing"
       ? fallback
-      : maybe._0
+      : maybe._0;
   }
 
 
@@ -60,7 +48,7 @@ var _pairshaped$elm_firebase$Native_Database = function () {
       reference = dbModel.database().ref()
     }
 
-    return referenceToModel(reference);
+    return _pairshaped$elm_firebase$Native_Shared.referenceToModel(reference);
   };
 
 
