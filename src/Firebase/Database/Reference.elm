@@ -25,12 +25,12 @@ child =
     Native.Database.Reference.child
 
 
-set : Json.Encode.Value -> msg -> Reference -> Task x x
+set : Json.Encode.Value -> Reference -> Task x ()
 set =
     Native.Database.Reference.set
 
 
-update : Json.Encode.Value -> msg -> Reference -> Task x x
+update : Json.Encode.Value -> Reference -> Task x ()
 update =
     Native.Database.Reference.update
 
