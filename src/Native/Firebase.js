@@ -1,6 +1,14 @@
 /*global firebase, _elm_lang$core$Native_List, _elm_lang$core$Native_Scheduler, F2 */
 
-console.log("Firebase elm wrapper native code--------------")
+/*
+ * This is to get elm-test to load up firebase immediately. There currently isn't a good
+ * solution, since it may conflict with tools like webpack, but this resolves my immediate
+ * problem, and I'm open to PRs/other solutions.
+ */
+if (typeof global == "object" && !global.firebase && typeof require == "function") {
+  global.firebase = require("firebase/firebase-node")
+}
+
 
 var _pairshaped$elm_firebase$Native_Firebase = function () { // eslint-disable-line no-unused-vars
   var debug = function () {
