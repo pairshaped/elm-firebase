@@ -1,9 +1,10 @@
-var _pairshaped$elm_firebase$Native_Firebase = function () {
+/*global firebase, _elm_lang$core$Native_List, _elm_lang$core$Native_Scheduler, F2 */
+var _pairshaped$elm_firebase$Native_Firebase = function () { // eslint-disable-line no-unused-vars
   var debug = function () {
-    // var args = ["Native.Firebase.debug"].concat(Array.prototype.slice.call(arguments));
+    // var args = ["Native.Firebase.debug"].concat(Array.prototype.slice.call(arguments))
     //
-    // console.log.apply(console, arguments);
-  };
+    // console.log.apply(console, arguments)
+  }
 
 
   // Firebase methods
@@ -13,65 +14,67 @@ var _pairshaped$elm_firebase$Native_Firebase = function () {
 
 
   var apps = function (dummy) {
-    debug("Firebase.apps", dummy);
-    return _elm_lang$core$Native_List.fromArray(firebase.apps);
-  };
+    debug("Firebase.apps", dummy)
+    return _elm_lang$core$Native_List.fromArray(firebase.apps)
+  }
 
 
   // Firebase.App methods
 
 
   var init = function (config) {
-    debug("Firebase.init", config);
-    var app = firebase.initializeApp(config);
+    debug("Firebase.init", config)
+    var app = firebase.initializeApp(config)
 
     var getApp = function () {
-      return app;
+      return app
     }
 
     return {
       ctor: "App",
       app: getApp
-    };
-  };
+    }
+  }
 
   var initWithName = function (config, name) {
-    debug("Firebase.initWithName", config, name);
-    var app = firebase.initializeApp(config, name);
+    debug("Firebase.initWithName", config, name)
+    var app = firebase.initializeApp(config, name)
 
     var getApp = function () {
-      return app;
+      return app
     }
 
     return {
       ctor: "App",
       app: getApp
-    };
-  };
+    }
+  }
 
 
   var deinit = function (model) {
-    debug("Firebase.deinit", model);
+    debug("Firebase.deinit", model)
     var app = model.app()
 
     return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
       app.delete().then(function () {
-        _elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" })
+        callback(
+          _elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" })
+        )
       })
-    });
-  };
+    })
+  }
 
 
   var name = function (model) {
-    debug("Firebase.name", model);
-    return model.app().name;
-  };
+    debug("Firebase.name", model)
+    return model.app().name
+  }
 
 
   var options = function (model) {
-    debug("Firebase.options", model);
-    return model.app().options;
-  };
+    debug("Firebase.options", model)
+    return model.app().options
+  }
 
 
   return {
@@ -82,5 +85,5 @@ var _pairshaped$elm_firebase$Native_Firebase = function () {
     "deinit": deinit,
     "name": name,
     "options": options
-  };
-}();
+  }
+}()

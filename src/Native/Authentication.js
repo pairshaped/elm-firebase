@@ -1,18 +1,20 @@
-var _pairshaped$elm_firebase$Native_Authentication = function () {
+/*global firebase, _elm_lang$core$Native_Scheduler, F2, F3 */
+
+var _pairshaped$elm_firebase$Native_Authentication = function () { // eslint-disable-line no-unused-vars
 
   // Utilities
 
   var debug = function () {
-    // var args = ["Native.Firebase.Authentication"].concat(Array.prototype.slice.call(arguments));
+    // var args = ["Native.Firebase.Authentication"].concat(Array.prototype.slice.call(arguments))
     //
-    // console.log.apply(console, args);
-  };
+    // console.log.apply(console, args)
+  }
 
 
   var authToModel = function (auth) {
     var getAuth = function () {
-      return auth;
-    };
+      return auth
+    }
 
     return {
       ctor: "Auth",
@@ -22,11 +24,11 @@ var _pairshaped$elm_firebase$Native_Authentication = function () {
 
 
   var userToModel = function (user) {
-    debug(".userToModel", user);
+    debug(".userToModel", user)
 
     var getUser = function () {
-      return user;
-    };
+      return user
+    }
 
     return {
       ctor: "User",
@@ -36,7 +38,7 @@ var _pairshaped$elm_firebase$Native_Authentication = function () {
 
 
   var errorToModel = function (err) {
-    debug(".errorToModel", err);
+    debug(".errorToModel", err)
 
     return {
       ctor: "User",
@@ -50,28 +52,28 @@ var _pairshaped$elm_firebase$Native_Authentication = function () {
 
 
   var init = function (appModel) {
-    debug(".init", appModel);
-    var app = appModel.app();
+    debug(".init", appModel)
+    var app = appModel.app()
 
-    return authToModel(firebase.auth(app));
+    return authToModel(firebase.auth(app))
   }
 
 
   var currentUser = function (authModel) {
-    debug(".currentUser", authModel);
-    var auth = authModel.auth();
+    debug(".currentUser", authModel)
+    var auth = authModel.auth()
 
     return userToModel(
       auth.currentUser
         ? { ctor: "Just", _0: auth.currentUser }
         : { ctor: "Nothing }"}
-    );
+    )
   }
 
 
   var confirmPasswordReset = function (code, password, authModel) {
-    debug(".confirmPasswordReset", code, password, authModel);
-    var auth = authModel.auth();
+    debug(".confirmPasswordReset", code, password, authModel)
+    var auth = authModel.auth()
 
     return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
       auth.confirmPasswordReset(code, password)
@@ -80,61 +82,65 @@ var _pairshaped$elm_firebase$Native_Authentication = function () {
             _elm_lang$core$Native_Scheduler.succeed(
               { ctor: "_Tuple0" }
             )
-          );
+          )
         })
         .catch(function (err) {
-           _elm_lang$core$Native_Scheduler.fail(errorToModel(err))
-        });
-    });
+          callback(
+            _elm_lang$core$Native_Scheduler.fail(errorToModel(err))
+          )
+        })
+    })
   }
 
 
   var createUserWithEmailAndPassword = function (email, password, authModel) {
-    debug(".createUserWithEmailAndPassword", email, password, authModel);
-    var auth = authModel.auth();
+    debug(".createUserWithEmailAndPassword", email, password, authModel)
+    var auth = authModel.auth()
 
     return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
-      auth.confirmPasswordReset(code, password)
+      auth.confirmPasswordReset(email, password)
         .then(function (user) {
           callback(
             _elm_lang$core$Native_Scheduler.succeed(
               userToModel(user)
             )
-          );
+          )
         })
         .catch(function (err) {
-           _elm_lang$core$Native_Scheduler.fail(errorToModel(err))
+          callback(
+            _elm_lang$core$Native_Scheduler.fail(errorToModel(err))
+          )
         })
-    });
+    })
   }
 
 
   var fetchProvidersForEmail = function (email, authModel) {
-    debug(".fetchProvidersForEmail", email, authModel);
-    var auth = authModel.auth();
+    debug(".fetchProvidersForEmail", email, authModel)
+    var auth = authModel.auth()
 
     return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
       auth.fetchProvidersForEmail(email)
         .then(function (providers) {
           callback(
             _elm_lang$core$Native_Scheduler.succeed(providers)
-          );
+          )
         })
-    });
+    })
   }
 
   var sendPasswordResetEmail = function (email, authModel) {
-    debug(".sendPasswordResetEmail", email, authModel);
-    var auth = authModel.auth();
+    debug(".sendPasswordResetEmail", email, authModel)
+    var auth = authModel.auth()
 
     return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
       auth.sendPasswordResetEmail(email)
         .then(function () {
           callback(
             _elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" })
-          );
+          )
         })
-    });
+    })
   }
 
 
@@ -143,62 +149,66 @@ var _pairshaped$elm_firebase$Native_Authentication = function () {
       .then(function (user) {
         callback(
           _elm_lang$core$Native_Scheduler.succeed(userToModel(user))
-        );
+        )
       })
       .catch(function (err) {
         callback(
           _elm_lang$core$Native_Scheduler.fail(errorToModel(err))
-        );
+        )
       })
   }
 
 
   var signInAnonymously = function (authModel) {
-    debug(".signInAnonymously", authModel);
-    var auth = authModel.auth();
+    debug(".signInAnonymously", authModel)
+    var auth = authModel.auth()
 
     return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
       _signInHandler(auth.signInAnonymously(), callback)
-    });
+    })
   }
 
 
   var signInWithEmailAndPassword = function (email, password, authModel) {
-    debug(".signInWithEmailAndPassword", email, password, authModel);
-    var auth = authModel.auth();
+    debug(".signInWithEmailAndPassword", email, password, authModel)
+    var auth = authModel.auth()
 
     return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
       _signInHandler(auth.signInWithEmailAndPassword(email, password), callback)
-    });
+    })
   }
 
 
   var signOut = function (authModel) {
-    debug(".signOut", authModel);
-    var auth = authModel.auth();
+    debug(".signOut", authModel)
+    var auth = authModel.auth()
 
     return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
       auth.signOut()
         .then(function () {
           callback(_elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" }))
         })
-    });
+    })
   }
 
 
   var verifyPasswordResetCode = function (code, authModel) {
-    debug(".verifyPasswordResetCode", email, password, authModel);
-    var auth = authModel.auth();
+    debug(".verifyPasswordResetCode", code, authModel)
+    var auth = authModel.auth()
 
     return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
       auth.verifyPasswordResetCode(code)
         .then(function (email) {
-          _elm_lang$core$Native_Scheduler.succeed(email)
+          callback(
+            _elm_lang$core$Native_Scheduler.succeed(email)
+          )
         })
         .catch(function (err) {
-           _elm_lang$core$Native_Scheduler.fail(errorToModel(err))
+          callback(
+            _elm_lang$core$Native_Scheduler.fail(errorToModel(err))
+          )
         })
-    });
+    })
   }
 
 
@@ -207,6 +217,7 @@ var _pairshaped$elm_firebase$Native_Authentication = function () {
 
   return {
     "init": init,
+    "currentUser": currentUser,
     "confirmPasswordReset": F3(confirmPasswordReset),
     "createUserWithEmailAndPassword": F3(createUserWithEmailAndPassword),
     "fetchProvidersForEmail": F2(fetchProvidersForEmail),

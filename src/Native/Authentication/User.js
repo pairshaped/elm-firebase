@@ -1,4 +1,6 @@
-var _pairshaped$elm_firebase$Native_Authentication_User = function () {
+/*global _elm_lang$core$Native_Scheduler */
+
+var _pairshaped$elm_firebase$Native_Authentication_User = function () { // eslint-disable-line no-unused-vars
 
   // Utilities
 
@@ -6,45 +8,6 @@ var _pairshaped$elm_firebase$Native_Authentication_User = function () {
     // var args = ["Native.Firebase.Authentication"].concat(Array.prototype.slice.call(arguments));
     //
     // console.log.apply(console, args);
-  };
-
-
-  var authToModel = function (auth) {
-    debug(".authToModel", auth);
-
-    var getAuth = function () {
-      return auth;
-    };
-
-    return {
-      ctor: "Auth",
-      auth: getAuth
-    }
-  }
-
-
-  var userToModel = function (user) {
-    debug(".userToModel", user);
-
-    var getUser = function () {
-      return user;
-    };
-
-    return {
-      ctor: "User",
-      user: getUser
-    }
-  }
-
-
-  var errorToModel = function (err) {
-    debug(".errorToModel", err);
-
-    return {
-      ctor: "User",
-      _0: err.code,
-      _1: err.message
-    }
   }
 
 
@@ -55,10 +18,10 @@ var _pairshaped$elm_firebase$Native_Authentication_User = function () {
     "providerId", "uid"
   ].reduce(function (methods, attr) {
     methods[attr] = function (userModel) {
-      debug("." + attr, userModel);
-      var user = userModel.user();
+      debug("." + attr, userModel)
+      var user = userModel.user()
 
-      return user[attr];
+      return user[attr]
     }
 
     return methods
@@ -66,21 +29,21 @@ var _pairshaped$elm_firebase$Native_Authentication_User = function () {
 
 
   var reload = function (userModel) {
-    debug(".reload", userModel);
-    var user = userModel.user();
+    debug(".reload", userModel)
+    var user = userModel.user()
 
     return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
       user.reload()
         .then(function () {
-          callback(_elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" }));
+          callback(_elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" }))
         })
     })
   }
 
 
   var toJSON = function (userModel) {
-    debug(".reload", userModel);
-    var user = userModel.user();
+    debug(".reload", userModel)
+    var user = userModel.user()
 
     return user.toJSON()
   }

@@ -1,0 +1,31 @@
+{
+  "name": "elm-firebase",
+  "version": "0.0.1",
+  "description": "Firebase 3 bindings for elm",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "eslint": "./node_modules/.bin/eslint --fix ./src/Native/**/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pairshaped/elm-firebase.git"
+  },
+  "keywords": [
+    "elm",
+    "firebase",
+    "firebase-v3"
+  ],
+  "author": "Pairshaped, Inc",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/pairshaped/elm-firebase/issues"
+  },
+  "homepage": "https://github.com/pairshaped/elm-firebase#readme",
+  "devDependencies": {
+    "eslint": "^3.16.1"
+  }
+}

@@ -1,30 +1,32 @@
-var _pairshaped$elm_firebase$Native_Database = function () {
+/*global firebase, _pairshaped$elm_firebase$Native_Shared, F2 */
+
+var _pairshaped$elm_firebase$Native_Database = function () { // eslint-disable-line no-unused-vars
 
   // Utilities
 
   var debug = function () {
-    // var args = ["Native.Firebase.Database"].concat(Array.prototype.slice.call(arguments));
+    // var args = ["Native.Firebase.Database"].concat(Array.prototype.slice.call(arguments))
     //
-    // console.log.apply(console, args);
-  };
+    // console.log.apply(console, args)
+  }
 
 
   var databaseToModel = function (database) {
     var getDatabase = function () {
-      return database;
-    };
+      return database
+    }
 
     return {
       ctor: "Database",
       database: getDatabase
-    };
-  };
+    }
+  }
 
 
   var maybeWithDefault = function (fallback, maybe) {
     return maybe.ctor == "Nothing"
       ? fallback
-      : maybe._0;
+      : maybe._0
   }
 
 
@@ -32,24 +34,24 @@ var _pairshaped$elm_firebase$Native_Database = function () {
 
 
   var init = function (appModel) {
-    debug("Firebase.Database.init", appModel, appModel.app());
+    debug("Firebase.Database.init", appModel, appModel.app())
     var database = firebase.database(appModel.app())
 
-    return databaseToModel(database);
-  };
+    return databaseToModel(database)
+  }
 
 
   var ref = function (maybePath, dbModel) {
-    debug("Firebase.Database.ref", maybePath, dbModel);
-    var reference;
+    debug("Firebase.Database.ref", maybePath, dbModel)
+    var reference
     if (maybePath.ctor == "Just") {
-      reference = dbModel.database().ref(maybeWithDefault(undefined, maybePath));
+      reference = dbModel.database().ref(maybeWithDefault(undefined, maybePath))
     } else {
       reference = dbModel.database().ref()
     }
 
-    return _pairshaped$elm_firebase$Native_Shared.referenceToModel(reference);
-  };
+    return _pairshaped$elm_firebase$Native_Shared.referenceToModel(reference)
+  }
 
 
   //
@@ -58,5 +60,5 @@ var _pairshaped$elm_firebase$Native_Database = function () {
   return {
     "init": init,
     "ref": F2(ref)
-  };
-}();
+  }
+}()
