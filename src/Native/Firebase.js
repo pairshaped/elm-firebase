@@ -50,6 +50,18 @@ var _pairshaped$elm_firebase$Native_Firebase = function () {
   };
 
 
+  var deinit = function (model) {
+    debug("Firebase.deinit", model);
+    var app = model.app()
+
+    return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
+      app.delete().then(function () {
+        _elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" })
+      })
+    });
+  };
+
+
   var name = function (model) {
     debug("Firebase.name", model);
     return model.app().name;
@@ -67,6 +79,7 @@ var _pairshaped$elm_firebase$Native_Firebase = function () {
     "apps": apps,
     "init": init,
     "initWithName": F2(initWithName),
+    "deinit": deinit,
     "name": name,
     "options": options
   };

@@ -5,6 +5,8 @@ module Firebase
         , sdkVersion
         , apps
         , init
+        , initWithName
+        , deinit
         , name
         , options
         )
@@ -15,7 +17,7 @@ module Firebase
 @docs App, Config
 
 # App methods
-@docs init, initWithName, name, options
+@docs init, initWithName, deinit, name, options
 
 
 # Helpers
@@ -23,6 +25,7 @@ module Firebase
 
 -}
 
+import Task exposing (Task)
 import Native.Firebase
 import Native.Shared
 
@@ -77,6 +80,11 @@ init =
 initWithName : Config -> String -> App
 initWithName =
     Native.Firebase.initWithName
+
+
+deinit : App -> Task x ()
+deinit =
+    Native.Firebase.deinit
 
 
 name : App -> String
