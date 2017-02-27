@@ -3,4 +3,3 @@ node_modules
 
 examples/kitchenSink/public/firebase.json
 examples/kitchenSink/public/main.js
-tests/Native/*.js
