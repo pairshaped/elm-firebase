@@ -2,6 +2,7 @@ module Tests exposing (..)
 
 import Test exposing (..)
 import Expect
+import Firebase
 
 
 all : Test

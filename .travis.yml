@@ -17,15 +17,13 @@ install:
   - nvm use
   - node --version
   - npm --version
-  - cd test
+  - npm install -g yarn
   - yarn global add elm
   - yarn
   - git clone https://github.com/NoRedInk/elm-ops-tooling
   - elm-ops-tooling/with_rety.rb elm-package install --yes
-  - cd ..
 
 script:
-  - cd test
   - yarn test
 
 cache:

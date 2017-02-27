@@ -1,4 +1,7 @@
 /*global firebase, _elm_lang$core$Native_List, _elm_lang$core$Native_Scheduler, F2 */
+
+console.log("Firebase elm wrapper native code--------------")
+
 var _pairshaped$elm_firebase$Native_Firebase = function () { // eslint-disable-line no-unused-vars
   var debug = function () {
     // var args = ["Native.Firebase.debug"].concat(Array.prototype.slice.call(arguments))

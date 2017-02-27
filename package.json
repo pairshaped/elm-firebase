@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "eslint": "./node_modules/.bin/eslint --fix ./src/Native/**/*.js",
-    "test": "elm-test"
+    "test": "./node_modules/elm-test/bin/elm-test"
   },
   "repository": {
     "type": "git",
@@ -26,6 +26,8 @@
     "eslint": "^3.16.1"
   },
   "dependencies": {
-    "elm-test": "^0.18.2"
+    "elm-test": "^0.18.2",
+    "firebase": "^3.6.10",
+    "firebase-server": "^0.9.1"
   }
 }
