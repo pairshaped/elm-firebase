@@ -1,6 +1,34 @@
-language: node_js
-cache: yarn
-before_script:
-  - yarn install -g elm
+# Adapted from https://github.com/rtfeldman/elm-css/blob/6ba8404f53269bc110c2e08ab24c9caf850da515/.travis.yml
+# Main differences being we should always use latest elm, and we back onto .nvmrc for install/use
+sudo: false
 
-script: cd unit-tests && yarn install && elm-package install && yarn test
+os:
+  - linux
+  - osx
+
+before_install:
+  - if [ ${TRAVIS_OS_NAME} == "osx" ];
+    then brew update; brew install nvm; mkdir ~/.nvm; export NVM_DIR=~/.nvm; source $(brew --prefix nvm)/nvm.sh;
+    fi
+  - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+
+install:
+  - nvm install
+  - nvm use
+  - node --version
+  - npm --version
+  - cd test
+  - yarn global add elm
+  - yarn
+  - git clone https://github.com/NoRedInk/elm-ops-tooling
+  - elm-ops-tooling/with_rety.rb elm-package install --yes
+  - cd ..
+
+script:
+  - cd test
+  - yarn test
+
+cache:
+  - yarn
+  - directories:
+    - tests/elm-stuff/build-artifacts

@@ -3,19 +3,19 @@
     "summary": "Firebase bindings for elm",
     "repository": "https://github.com/pairshaped/elm-firebase.git",
     "license": "BSD3",
-    "native-modules": true,
     "source-directories": [
         "src"
     ],
     "exposed-modules": [
-      "Firebase",
-      "Firebase.Errors",
-      "Firebase.Database",
-      "Firebase.Database.Query",
-      "Firebase.Database.Reference",
-      "Firebase.Database.Snapshot",
-      "Firebase.Database.Types"
+        "Firebase",
+        "Firebase.Errors",
+        "Firebase.Database",
+        "Firebase.Database.Query",
+        "Firebase.Database.Reference",
+        "Firebase.Database.Snapshot",
+        "Firebase.Database.Types"
     ],
+    "native-modules": true,
     "dependencies": {
         "elm-lang/core": "5.1.1 <= v < 6.0.0"
     },

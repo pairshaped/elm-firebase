@@ -55,20 +55,12 @@ type alias Model =
     }
 
 
-initialApiKey : String
-initialApiKey = "AIzaSyAKyWsMVcQZwnW3CKkcasyejfDEE7aMLmo"
-
-
-initialDatabaseURL : String
-initialDatabaseURL = "https://elm-firebase-ca259.firebaseio.com"
-
-
 initialModel : Model
 initialModel =
     { config =
-        { apiKey = initialApiKey
+        { apiKey = ""
         , authDomain = ""
-        , databaseURL = initialDatabaseURL
+        , databaseURL = ""
         , storageBucket = ""
         , messagingSenderId = ""
         }

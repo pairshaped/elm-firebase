@@ -3,12 +3,9 @@
   "version": "0.0.1",
   "description": "Firebase 3 bindings for elm",
   "main": "index.js",
-  "directories": {
-    "example": "examples"
-  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "eslint": "./node_modules/.bin/eslint --fix ./src/Native/**/*.js"
+    "eslint": "./node_modules/.bin/eslint --fix ./src/Native/**/*.js",
+    "test": "elm-test"
   },
   "repository": {
     "type": "git",
@@ -20,12 +17,15 @@
     "firebase-v3"
   ],
   "author": "Pairshaped, Inc",
-  "license": "BSD-2-Clause",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/pairshaped/elm-firebase/issues"
   },
   "homepage": "https://github.com/pairshaped/elm-firebase#readme",
   "devDependencies": {
     "eslint": "^3.16.1"
+  },
+  "dependencies": {
+    "elm-test": "^0.18.2"
   }
 }
