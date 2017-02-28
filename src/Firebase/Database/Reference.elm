@@ -4,6 +4,9 @@ effect module Firebase.Database.Reference
         ( child
         , set
         , update
+        , updateMulti
+        , push
+        , remove
         , orderByChild
         , orderByKey
         , orderByPriority
@@ -25,14 +28,29 @@ child =
     Native.Database.Reference.child
 
 
-set : Json.Encode.Value -> Reference -> Task x ()
+set : Json.Encode.Value -> Reference -> Task Error ()
 set =
     Native.Database.Reference.set
 
 
-update : Json.Encode.Value -> Reference -> Task x ()
+update : Json.Encode.Value -> Reference -> Task Error ()
 update =
     Native.Database.Reference.update
+
+
+updateMulti : List ( String, Json.Encode.Value ) -> Reference -> Task Error ()
+updateMulti pathsWithValues ref =
+    update (Json.Encode.object pathsWithValues) ref
+
+
+push : Reference -> Reference
+push =
+    Native.Database.Reference.push
+
+
+remove : Reference -> Task x ()
+remove =
+    Native.Database.Reference.remove
 
 
 orderByChild : String -> Reference -> Query

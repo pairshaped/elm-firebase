@@ -26,11 +26,19 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".set", json, refModel)
 
     return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
-      refModel.reference().set(json, function () {
-        callback(
-          _elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" })
-        )
-      })
+      refModel
+        .reference()
+        .set(json)
+        .then(function () {
+            callback(
+              _elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" })
+            )
+        })
+        .catch(function (err) {
+            callback(
+              _elm_lang$core$Native_Scheduler.fail(_pairshaped$elm_firebase$Native_Shared.errorToModel(err))
+            )
+        })
     })
   }
 
@@ -39,12 +47,28 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".update", json, refModel)
 
     return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
-      refModel.reference().update(json, function () {
-        callback(
-          _elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" })
-        )
-      })
+      refModel
+        .reference()
+        .update(json)
+        .then(function () {
+          callback(
+            _elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" })
+          )
+        })
+        .catch(function (err) {
+            callback(
+              _elm_lang$core$Native_Scheduler.fail(_pairshaped$elm_firebase$Native_Shared.errorToModel(err))
+            )
+        })
     })
+  }
+
+
+  var push = function (refModel) {
+    debug(".remove", refModel)
+    var ref = refModel.reference()
+
+    return _pairshaped$elm_firebase$Native_Shared.referenceToModel(ref.push())
   }
 
 
@@ -140,6 +164,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     "child": F2(child),
     "set": F2(set),
     "update": F2(update),
+    "push": push,
     "remove": remove,
     "orderByChild": F2(orderByChild),
     "orderByKey": orderByKey,

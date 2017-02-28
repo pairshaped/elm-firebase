@@ -37,17 +37,6 @@ var _pairshaped$elm_firebase$Native_Authentication = function () { // eslint-dis
   }
 
 
-  var errorToModel = function (err) {
-    debug(".errorToModel", err)
-
-    return {
-      ctor: "User",
-      _0: err.code,
-      _1: err.message
-    }
-  }
-
-
   // Authentication methods
 
 
@@ -86,7 +75,7 @@ var _pairshaped$elm_firebase$Native_Authentication = function () { // eslint-dis
         })
         .catch(function (err) {
           callback(
-            _elm_lang$core$Native_Scheduler.fail(errorToModel(err))
+            _elm_lang$core$Native_Scheduler.fail(_pairshaped$elm_firebase$Native_Shared.errorToModel(err))
           )
         })
     })
@@ -108,7 +97,7 @@ var _pairshaped$elm_firebase$Native_Authentication = function () { // eslint-dis
         })
         .catch(function (err) {
           callback(
-            _elm_lang$core$Native_Scheduler.fail(errorToModel(err))
+            _elm_lang$core$Native_Scheduler.fail(_pairshaped$elm_firebase$Native_Shared.errorToModel(err))
           )
         })
     })
@@ -153,7 +142,7 @@ var _pairshaped$elm_firebase$Native_Authentication = function () { // eslint-dis
       })
       .catch(function (err) {
         callback(
-          _elm_lang$core$Native_Scheduler.fail(errorToModel(err))
+          _elm_lang$core$Native_Scheduler.fail(_pairshaped$elm_firebase$Native_Shared.errorToModel(err))
         )
       })
   }
@@ -205,7 +194,7 @@ var _pairshaped$elm_firebase$Native_Authentication = function () { // eslint-dis
         })
         .catch(function (err) {
           callback(
-            _elm_lang$core$Native_Scheduler.fail(errorToModel(err))
+            _elm_lang$core$Native_Scheduler.fail(_pairshaped$elm_firebase$Native_Shared.errorToModel(err))
           )
         })
     })
