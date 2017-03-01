@@ -15,3 +15,7 @@ type Query
 
 type Snapshot
     = Snapshot
+
+
+type OnDisconnect
+    = OnDisconnect

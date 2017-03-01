@@ -18,7 +18,7 @@ effect module Firebase.Database.Reference
 
 import Json.Encode
 import Task exposing (Task)
-import Firebase.Database.Types exposing (Reference, Snapshot, Query)
+import Firebase.Database.Types exposing (Reference, Snapshot, Query, OnDisconnect)
 import Firebase.Errors exposing (Error)
 import Native.Database.Reference
 
@@ -76,6 +76,11 @@ orderByValue =
 toString : Reference -> String
 toString =
     Native.Database.Reference.toString
+
+
+onDisconnect : Reference -> OnDisconnect
+onDisconnect =
+    Native.Database.Reference.onDisconnect
 
 
 once : String -> Reference -> Task x Snapshot

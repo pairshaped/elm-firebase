@@ -133,6 +133,20 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
   }
 
 
+  var onDisconnect = function (refModel) {
+    debug(".onDisconnect", refModel)
+    var ref = refModel.reference()
+
+    var getOnDisconnect = function () {
+      return ref.onDisconnect()
+    }
+
+    // Reference is the only thing that uses .onDisconnect(), so
+    // I'm not going to make a helper for it.
+    return { ctor: "OnDisconnect", onDisconnect: getOnDisconnect }
+  }
+
+
   var once = function (eventType, refModel) {
     debug(".once", eventType, refModel)
     var ref = refModel.reference()
@@ -171,6 +185,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     "orderByPriority": orderByPriority,
     "orderByValue": orderByValue,
     "toString" : toString,
+    "onDisconnect": onDisconnect,
     "once" : F2(once),
     "on" : F3(on),
     "off" : F2(off)
