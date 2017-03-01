@@ -18,17 +18,16 @@ import Firebase.Errors exposing (Error)
 import Firebase.Authentication.Types exposing (Auth, User)
 import Native.Authentication
 
-{-  TODO: I'm currently skipping the following methods:
 
-      * auth.applyActionCode
-      * auth.checkActionCode
-      * auth.getRedirectResult
-      * auth.onAuthStateChanges
+{- TODO: I'm currently skipping the following methods:
 
-    I will look into adding these later if there are any needs
+     * auth.applyActionCode
+     * auth.checkActionCode
+     * auth.getRedirectResult
+     * auth.onAuthStateChanges
+
+   I will look into adding these later if there are any needs
 -}
-
-
 -- Methods
 
 
@@ -68,7 +67,7 @@ signInAnonymously =
 
 
 signInWithEmailAndPassword : String -> String -> Auth -> Task Error User
-signInWithEmailAndPassword=
+signInWithEmailAndPassword =
     Native.Authentication.signInWithEmailAndPassword
 
 
