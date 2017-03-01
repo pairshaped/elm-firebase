@@ -202,7 +202,6 @@ update msg model =
                 , Cmd.none
                 )
 
-
         SignInAnonymously ->
             let
                 auth : Auth
@@ -214,7 +213,6 @@ update msg model =
                 , Task.attempt SignedIn (Firebase.Authentication.signInAnonymously auth)
                 )
 
-
         SignedIn (Ok user) ->
             ( { model | currentUser = Just user }
             , Cmd.none
@@ -222,7 +220,8 @@ update msg model =
 
         SignedIn (Err err) ->
             let
-                _ = Debug.log "SignedIn.fail" err
+                _ =
+                    Debug.log "SignedIn.fail" err
             in
                 ( { model | currentUser = Nothing }
                 , Cmd.none
@@ -240,9 +239,10 @@ update msg model =
                 )
 
         NoOp _ ->
-          ( model
-          , Cmd.none
-          )
+            ( model
+            , Cmd.none
+            )
+
 
 
 -- View
@@ -274,6 +274,7 @@ view model =
         , viewSignIn model.currentUser
         ]
 
+
 viewSignIn : Maybe User -> Html Msg
 viewSignIn maybeUser =
     case maybeUser of
@@ -281,7 +282,7 @@ viewSignIn maybeUser =
             div
                 []
                 [ div [] [ text "Successfully authenticated" ]
-                , div [] [ text ("Is anonymous? " ++ (toString (Firebase.Authentication.User.isAnonymous user)))]
+                , div [] [ text ("Is anonymous? " ++ (toString (Firebase.Authentication.User.isAnonymous user))) ]
                 , button [ onClick SignOut ] [ text "Sign out" ]
                 ]
 

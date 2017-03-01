@@ -25,9 +25,9 @@ main =
         subscriptions model =
             case model.reference of
                 Just ref ->
-                   Sub.batch
-                      [ Firebase.Database.Reference.on "value" ref UpdatedSnapshot
-                      ]
+                    Sub.batch
+                        [ Firebase.Database.Reference.on "value" ref UpdatedSnapshot
+                        ]
 
                 Nothing ->
                     Sub.none
@@ -96,6 +96,7 @@ type Msg
     | ChangeValue String
     | SetChildValue
     | NoOp ()
+    | WriteStatus (Result Error ())
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -213,7 +214,7 @@ update msg model =
                             ref
                                 |> Firebase.Database.Reference.child model.child
                                 |> Firebase.Database.Reference.set value
-                                |> Task.perform NoOp
+                                |> Task.attempt WriteStatus
 
                         Nothing ->
                             Cmd.none
@@ -227,6 +228,26 @@ update msg model =
             , Cmd.none
             )
 
+        WriteStatus (Ok _) ->
+            let
+                _ =
+                    Debug.log "Firebase write success"
+            in
+                ( model
+                , Cmd.none
+                )
+
+        WriteStatus (Err _) ->
+            let
+                _ =
+                    Debug.log "Firebase write fail"
+            in
+                ( model
+                , Cmd.none
+                )
+
+
+
 -- View
 
 
@@ -238,7 +259,8 @@ view model =
                 disableSetApplication : Bool
                 disableSetApplication =
                     ((String.isEmpty model.config.apiKey)
-                    && (String.isEmpty model.config.databaseURL))
+                        && (String.isEmpty model.config.databaseURL)
+                    )
             in
                 div
                     []
@@ -258,6 +280,7 @@ view model =
                         [ button [ onClick SetApplication, disabled disableSetApplication ] [ text "Connect to firebase app" ]
                         ]
                     ]
+
         Just _ ->
             div
                 []
@@ -273,7 +296,8 @@ viewPath : Model -> Html Msg
 viewPath model =
     let
         path : String
-        path = Maybe.withDefault "" model.path
+        path =
+            Maybe.withDefault "" model.path
     in
         div
             []
