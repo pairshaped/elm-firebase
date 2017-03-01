@@ -47,7 +47,7 @@ limitToLast =
     Native.Database.Query.limitToLast
 
 
-once : String -> Query -> Task Never Snapshot
+once : String -> Query -> Task x Snapshot
 once =
     Native.Database.Query.once
 
@@ -55,6 +55,10 @@ once =
 on : String -> Query -> (Snapshot -> msg) -> Sub msg
 on event query tagger =
     subscription (MySub event query tagger)
+
+
+
+-- Private
 
 
 uuid : Query -> String

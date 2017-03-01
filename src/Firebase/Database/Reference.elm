@@ -4,6 +4,9 @@ effect module Firebase.Database.Reference
         ( child
         , set
         , update
+        , updateMulti
+        , push
+        , remove
         , orderByChild
         , orderByKey
         , orderByPriority
@@ -15,7 +18,7 @@ effect module Firebase.Database.Reference
 
 import Json.Encode
 import Task exposing (Task)
-import Firebase.Database.Types exposing (Reference, Snapshot, Query)
+import Firebase.Database.Types exposing (Reference, Snapshot, Query, OnDisconnect)
 import Firebase.Errors exposing (Error)
 import Native.Database.Reference
 
@@ -25,14 +28,29 @@ child =
     Native.Database.Reference.child
 
 
-set : Json.Encode.Value -> Reference -> Task x ()
+set : Json.Encode.Value -> Reference -> Task Error ()
 set =
     Native.Database.Reference.set
 
 
-update : Json.Encode.Value -> Reference -> Task x ()
+update : Json.Encode.Value -> Reference -> Task Error ()
 update =
     Native.Database.Reference.update
+
+
+updateMulti : List ( String, Json.Encode.Value ) -> Reference -> Task Error ()
+updateMulti pathsWithValues ref =
+    update (Json.Encode.object pathsWithValues) ref
+
+
+push : Reference -> Reference
+push =
+    Native.Database.Reference.push
+
+
+remove : Reference -> Task x ()
+remove =
+    Native.Database.Reference.remove
 
 
 orderByChild : String -> Reference -> Query
@@ -58,6 +76,11 @@ orderByValue =
 toString : Reference -> String
 toString =
     Native.Database.Reference.toString
+
+
+onDisconnect : Reference -> OnDisconnect
+onDisconnect =
+    Native.Database.Reference.onDisconnect
 
 
 once : String -> Reference -> Task x Snapshot

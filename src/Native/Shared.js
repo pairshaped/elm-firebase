@@ -104,6 +104,16 @@ var _pairshaped$elm_firebase$Native_Shared = function () {
   }
 
 
+  var errorToModel = function (err) {
+    return {
+      ctor: "Error",
+      _0: err.code,
+      _1: err.message
+    }
+  }
+
+
+
   var queryToModel = function (query) {
     var getQuery = function () {
       return query
