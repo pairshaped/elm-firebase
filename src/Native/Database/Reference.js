@@ -30,12 +30,12 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
         .reference()
         .set(json)
         .then(function () {
-            callback(
+          callback(
               _elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" })
             )
         })
         .catch(function (err) {
-            callback(
+          callback(
               _elm_lang$core$Native_Scheduler.fail(_pairshaped$elm_firebase$Native_Shared.errorToModel(err))
             )
         })
@@ -56,7 +56,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
           )
         })
         .catch(function (err) {
-            callback(
+          callback(
               _elm_lang$core$Native_Scheduler.fail(_pairshaped$elm_firebase$Native_Shared.errorToModel(err))
             )
         })
