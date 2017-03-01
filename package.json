@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "eslint": "./node_modules/.bin/eslint --fix ./src/Native/**/*.js",
+    "elm-format": "elm-format src/**/*.elm",
     "test": "./node_modules/elm-test/bin/elm-test",
     "firebaseServer": "./node_modules/firebase-server/bin/firebase-server"
   },
