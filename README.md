@@ -1,12 +1,12 @@
 # WARNING
 
-The current state of this is very limited, and this is very much in **alpha**. Consider the API in complete flux.
+The current state of this is very limited, and this is very much in **alpha**. Consider the API in flux.
 
-It is completely possible that master will be completely broken at any given time until we hit a stable 1.x.
+It is completely possible that master will be broken at any given time until we hit a stable 1.x.
 
 # elm-firebase
 
-**elm-firebase** is a set of bindings between Elm (>= ?) 0.18 and Firebase 3.x.
+**elm-firebase** is a set of bindings between Elm >= 0.18 and Firebase 3.x.
 
 ## Goals
 
@@ -26,7 +26,7 @@ Then you can add elm-firebase to your elm-package.json like so:
 ```
 {
   "dependencies": {
-    "pairshaped/elm-firebase": "0.0.2 <= v < 1.0.0"
+    "pairshaped/elm-firebase": "0.0.3 <= v < 1.0.0"
   },
   "dependency-sources": {
     "pairshaped/elm-firebase": {
