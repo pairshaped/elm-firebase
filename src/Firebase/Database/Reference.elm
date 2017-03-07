@@ -1,7 +1,9 @@
 effect module Firebase.Database.Reference
     where { subscription = MySub }
     exposing
-        ( child
+        ( key
+        , parent
+        , child
         , set
         , update
         , updateMulti
@@ -21,6 +23,16 @@ import Task exposing (Task)
 import Firebase.Database.Types exposing (Reference, Snapshot, Query, OnDisconnect)
 import Firebase.Errors exposing (Error)
 import Native.Database.Reference
+
+
+key : Reference -> String
+key =
+    Native.Database.Reference.key
+
+
+parent : Reference -> Reference
+parent =
+    Native.Database.Reference.parent
 
 
 child : String -> Reference -> Reference
