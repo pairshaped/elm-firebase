@@ -26,7 +26,7 @@ Then you can add elm-firebase to your elm-package.json like so:
 ```
 {
   "dependencies": {
-    "pairshaped/elm-firebase": "0.0.3 <= v < 1.0.0"
+    "pairshaped/elm-firebase": "0.0.5 <= v < 1.0.0"
   },
   "dependency-sources": {
     "pairshaped/elm-firebase": {
