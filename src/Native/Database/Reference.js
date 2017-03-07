@@ -14,6 +14,20 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
   // Reference methods
 
 
+  var key = function (refModel) {
+    debug(".child", path, refModel)
+    var reference = refModel.reference().child(path)
+
+    return reference.key
+  }
+
+  var parent = function (refModel) {
+    debug(".child", path, refModel)
+    var reference = refModel.reference().child(path)
+
+    return reference.parent
+  }
+
   var child = function (path, refModel) {
     debug(".child", path, refModel)
     var reference = refModel.reference().child(path)
@@ -175,6 +189,8 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
 
 
   return {
+    "key": key,
+    "parent": parent,
     "child": F2(child),
     "set": F2(set),
     "update": F2(update),
