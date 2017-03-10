@@ -175,7 +175,7 @@ main =
 
 
 type Msg
-    = FooUpdated Firebase.Database.Types.Snapshot
+    = FooValue Firebase.Database.Types.Snapshot
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
