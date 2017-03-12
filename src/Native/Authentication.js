@@ -126,38 +126,6 @@ var _pairshaped$elm_firebase$Native_Authentication = function () { // eslint-dis
     })
   }
 
-  var onAuthStateChanged = function (authModel, tagger) {
-    debug(".onAuthStateChanged", authModel)
-    var auth = authModel.auth()
-
-    return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
-      if (!auth.__elmFirebaseAuthChangedUnsubscribeFn) {
-        auth.__elmFirebaseAuthChangedUnsubscribeFn = auth.onAuthStateChanged(function (user) {
-          var maybeUserModel = user ?
-            { ctor: "Just", _0: userToModel(user) } :
-            { ctor: "Nothing" }
-
-          _elm_lang$core$Native_Scheduler.rawSpan(
-            tagger(maybeUserModel)
-          )
-        })
-      }
-      callback(_elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" }))
-    })
-  }
-
-  var offAuthStateChanged = function (authModel) {
-    debug(".offAuthStateChanged", authModel)
-    var auth = authModel.auth()
-
-    if (auth.__elmFirebaseAuthChangedUnsubscribeFn) {
-      auth.__elmFirebaseAuthChangedUnsubscribeFn()
-      delete auth.__elmFirebaseAuthChangedUnsubscribeFn
-    }
-
-    return { ctor: "_Tuple0" }
-  }
-
   var sendPasswordResetEmail = function (email, authModel) {
     debug(".sendPasswordResetEmail", email, authModel)
     var auth = authModel.auth()
@@ -251,8 +219,6 @@ var _pairshaped$elm_firebase$Native_Authentication = function () { // eslint-dis
     "confirmPasswordReset": F3(confirmPasswordReset),
     "createUserWithEmailAndPassword": F3(createUserWithEmailAndPassword),
     "fetchProvidersForEmail": F2(fetchProvidersForEmail),
-    "onAuthStateChanged": F2(onAuthStateChanged),
-    "offAuthStateChanged": offAuthStateChanged,
     "sendPasswordResetEmail": F2(sendPasswordResetEmail),
     "signInAnonymously": signInAnonymously,
     "signInWithEmailAndPassword": F3(signInWithEmailAndPassword),

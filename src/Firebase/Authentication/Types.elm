@@ -4,3 +4,4 @@ type Auth = Auth
 type User = User
 type Provider = Provider
 type AuthCredential = AuthCredential
+type AuthSubscription = AuthSubscription
