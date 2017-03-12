@@ -178,6 +178,7 @@ var _pairshaped$elm_firebase$Native_Shared = function () {
     "databaseToModel": databaseToModel,
     "referenceToModel": referenceToModel,
     "snapshotToModel": snapshotToModel,
+    "errorToModel": errorToModel,
     "queryToModel": queryToModel,
     "sourceOnSnapshot": sourceOnSnapshot,
     "sourceOffSnapshot": sourceOffSnapshot,
