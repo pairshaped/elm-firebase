@@ -1,4 +1,12 @@
-module Firebase.Database.OnDisconnect exposing ()
+module Firebase.Database.OnDisconnect
+    exposing
+        ( cancel
+        , remove
+        , set
+        , setWithPriority
+        , update
+        , updateMulti
+        )
 
 
 import Firebase.Database.Types exposing (OnDisconnect)
