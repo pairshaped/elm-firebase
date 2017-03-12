@@ -1,5 +1,5 @@
 {
-    "version": "0.0.7",
+    "version": "0.0.8",
     "summary": "Firebase bindings for elm",
     "repository": "https://github.com/pairshaped/elm-firebase.git",
     "license": "BSD3",
@@ -13,6 +13,7 @@
         "Firebase.Database.Query",
         "Firebase.Database.Reference",
         "Firebase.Database.Snapshot",
+        "Firebase.Database.OnDisconnect",
         "Firebase.Database.Types",
         "Firebase.Authentication",
         "Firebase.Authentication.Types",
