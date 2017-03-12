@@ -22,12 +22,12 @@ providerId =
     Native.Authentication.Provider.id
 
 
-tokenCredential : String -> AuthCredential
+tokenCredential : String -> Provier -> AuthCredential
 tokenCredential =
     Native.Authentication.Provider.tokenCredential
 
 
-emailPasswordCredential : String -> String -> AuthCredential
+emailPasswordCredential : String -> String -> Provider -> AuthCredential
 emailPasswordCredential =
     Native.Authentication.Provider.emailAndPasswordCredential
 
