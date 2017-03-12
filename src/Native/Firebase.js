@@ -1,4 +1,4 @@
-/*global firebase, _elm_lang$core$Native_List, _elm_lang$core$Native_Scheduler, F2 */
+/*global global, require, _pairshaped$elm_firebase$Native_Shared, firebase, _elm_lang$core$Native_List, _elm_lang$core$Native_Scheduler, F2 */
 
 /*
  * This is to get elm-test to load up firebase immediately. There currently isn't a good
@@ -37,28 +37,14 @@ var _pairshaped$elm_firebase$Native_Firebase = function () { // eslint-disable-l
     debug("Firebase.init", config)
     var app = firebase.initializeApp(config)
 
-    var getApp = function () {
-      return app
-    }
-
-    return {
-      ctor: "App",
-      app: getApp
-    }
+    return _pairshaped$elm_firebase$Native_Shared.appToModel(app)
   }
 
   var initWithName = function (config, name) {
     debug("Firebase.initWithName", config, name)
     var app = firebase.initializeApp(config, name)
 
-    var getApp = function () {
-      return app
-    }
-
-    return {
-      ctor: "App",
-      app: getApp
-    }
+    return _pairshaped$elm_firebase$Native_Shared.appToModel(app)
   }
 
 

@@ -65,6 +65,18 @@ var _pairshaped$elm_firebase$Native_Shared = function () {
   var uuid = uuidGenerator()
 
 
+  var appToModel = function (app) {
+    var getApp = function () {
+      return app
+    }
+
+    return {
+      ctor: "App",
+      app: getApp
+    }
+  }
+
+
   var databaseToModel = function (database) {
     var getDatabase = function () {
       return database
@@ -102,16 +114,6 @@ var _pairshaped$elm_firebase$Native_Shared = function () {
         : { ctor: "Nothing" }
     }
   }
-
-
-  var errorToModel = function (err) {
-    return {
-      ctor: "Error",
-      _0: err.code,
-      _1: err.message
-    }
-  }
-
 
 
   var queryToModel = function (query) {
@@ -172,6 +174,7 @@ var _pairshaped$elm_firebase$Native_Shared = function () {
    * to other parts of the native bindings and not from elm itself.
    */
   return {
+    "appToModel": appToModel,
     "databaseToModel": databaseToModel,
     "referenceToModel": referenceToModel,
     "snapshotToModel": snapshotToModel,
