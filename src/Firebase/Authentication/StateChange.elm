@@ -164,8 +164,10 @@ onSelfMsg router selfMsg state =
                     newSubscriptions
                         |> List.map Native.Authentication.StateChange.on
 
+
+
             in
-                Task.succeed { state | cancelCallbacks = state.cancelCallbacks ++ newCancelCallbacks }
+                Task.succeed { state | cancelCallbacks = newCancelCallbacks }
 
         RemoveSubscriptions ->
 
