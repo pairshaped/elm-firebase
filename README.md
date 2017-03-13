@@ -1,8 +1,17 @@
 # WARNING
 
+## The state of this library
+
 The current state of this is very limited, and this is very much in **alpha**. Consider the API in flux.
 
 It is completely possible that master will be broken at any given time until we hit a stable 1.x.
+
+## Elm guarantees
+
+In it's current state, elm-firebase completely removes any runtime guarantees that Elm provides. This is because firebase is a close-source black box, which makes it very untestable. When you use this library, you are risking, as [@rtfeldman](https://github.com/rtfeldman) put it; "wrapping a JS library where you can't even know how it works is just bound to cost you hours of debugging down the line".
+
+
+With that in mind, feel free to play with this, but use it at your own risk.
 
 # elm-firebase
 
