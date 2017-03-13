@@ -9,6 +9,8 @@ module Firebase.Database.OnDisconnect
         )
 
 
+import Json.Encode
+import Task exposing (Task)
 import Firebase.Database.Types exposing (OnDisconnect)
 import Firebase.Errors exposing (Error)
 import Native.Database.OnDisconnect
