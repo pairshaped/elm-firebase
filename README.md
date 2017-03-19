@@ -24,6 +24,8 @@ With that in mind, feel free to play with this, but use it at your own risk.
 
 ## Getting started
 
+### Elm
+
 First, you'll need to install [elm-github-install](https://github.com/gdotdesign/elm-github-install).
 
 ```
@@ -51,6 +53,68 @@ Now you're ready to install!
 ```
 $ elm-github-install
 ```
+
+### Your HTML files
+
+You'll need to include the firebase javascripts yourself. That could either mean bower, webpack+npm, or using the gstatic cdn.
+
+Here are a list of firebase versions that have or will be tested:
+
+| Version | Works?   | CDN Link |
+|---------|----------|----------|
+| 3.6.9   | YES      | https://www.gstatic.com/firebasejs/3.6.9/firebase.js |
+|---------|----------|----------|
+| 3.7.1   | Probably | https://www.gstatic.com/firebasejs/3.7.1/firebase.js |
+
+If you run into a weird or unexplainable bug, please ensure you are using a version that has been tested and verified.
+
+I expect all the 3.x firebase versions to work but sticking to known versions will help eliminate potential bugs if a method's behaviour is changed.
+
+## Key differences to the library keep things simple in Elm
+
+ - `snapshot.val()` maps to `Firebase.Database.Snapshot.value snapshot` rather than `Firebase.Database.Snapshot.val snapshot`. I chose to be more explicit because I thought `val` wasn't as meaningful as it could be.
+ - `reference.on`, `reference.off`, `query.on`, and `query.off` map to singular subscription methods: `Firebase.Database.Reference.on` and `Firebase.Database.Query.on` respectively.
+When you're done, just remove your subscription from `Sub.batch` and elm-firebase will do the rest!
+ - Subscribed queries must live on the model, see [Internals of a Subscription](#Internals-of-a-Subscription) for more information.
+
+### Interals of a Subscription
+
+Building queries from references in Elm also assigns a hidden uuid.
+At the time of this writing, Elm does not support comparing tagger methods, and firebase doesn't provide a way to identify how a query was created (ie ordering, comparisons, etc.).
+This is a huge problem for subscribing to a query, because Elm needs a way to know if a subscription is new (begin the subscription in js), persisting (do nothing, let the subscription continue), or removed (tell js to stop the subscription).
+The hidden uuid will always guarantee uniqueness, but at a small price - you *must* keep the queries you're interested using inside your model (or some persistent storage between updates).
+Every time you create or modify a query, the uuid is re-generated.
+
+To demonstrated:
+
+```
+sourceRef : Firebase.Database.Types.Reference
+sourceRef =
+    app
+        |> Firebase.Database.init
+        |> Firebase.Database.ref (Just "foo")
+
+
+queryOne : Firebase.Database.Types.Query
+queryOne =
+    sourceRef
+        |> Firebase.Database.Reference.orderByValue
+        |> Firebase.Database.Query.limitToFirst 1
+
+
+queryTwo : Firebase.Database.Types.Query
+queryTwo =
+    sourceRef
+        |> Firebase.Database.Reference.orderByValue
+        |> Firebase.Database.Query.limitToFirst 1
+```
+
+Even though `queryOne` and `queryTwo` will produce the same results when subscribed to, they are technically not the same to the query effect manager.
+
+I may change this in the future so that queries keep track of how they were built.
+The downside of this is that it would be the burden of native code to track this, but would mean we can optimize the number of active subscriptions by having multiple taggers re-use the same subscription if they are the same.
+The only main change this would provide is removing the requirement for a query to be in the model.
+I'm personally not convinced that the query in the model is a bad thing, since the `subscriptions` method should probably be as dumb as possible.
 
 ## Connecting to your firebase database
 
