@@ -63,7 +63,6 @@ Here are a list of firebase versions that have or will be tested:
 | Version | Works?   | CDN Link |
 |---------|----------|----------|
 | 3.6.9   | YES      | https://www.gstatic.com/firebasejs/3.6.9/firebase.js |
-|---------|----------|----------|
 | 3.7.1   | Probably | https://www.gstatic.com/firebasejs/3.7.1/firebase.js |
 
 If you run into a weird or unexplainable bug, please ensure you are using a version that has been tested and verified.
