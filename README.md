@@ -284,7 +284,7 @@ subscriptions model =
 
 ## Example
 
-Based on excellent advice from [@pdamoc](https://github.com/pdamoc), we wrote [elm-firebase-todomvc](https://elm-firebase-todomvc.firebaseapp.com/).
+Based on excellent advice from [@pdamoc](https://github.com/pdamoc), here is [elm-firebase-todomvc](https://github.com/mrozbarry/elm-firebase-todomvc), and a live demo [here](https://elm-firebase-todomvc.firebaseapp.com/).
 
 Check out the [kitchen sink](./examples/kitchenSink/src/Main.elm) or [writer](./examples/writer/src/Main.elm) examples for information.
 
