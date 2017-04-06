@@ -19,7 +19,6 @@ module Firebase
 # App methods
 @docs init, initWithName, deinit, name, options
 
-
 # Helpers
 @docs sdkVersion, apps
 
@@ -34,6 +33,8 @@ import Native.Shared
 
 
 {-| App is a wrapper around [firebase.app.App](https://firebase.google.com/docs/reference/js/firebase.app.App)
+
+This represents an instance of `firebase.app.App`
 -}
 type App
     = App
@@ -56,13 +57,21 @@ type alias Config =
 -- Firebase methods
 
 
-{-|
+{-| Get the sdk version that is loaded on the webpage.
+
+Firebase.sdkVersion -- Result: 3.0.0
+
+Maps to `firebase.SDK_VERSION`
 -}
 sdkVersion : String
 sdkVersion =
     Native.Firebase.sdkVersion
 
 
+{-| Get a list of all the apps that have been initialized in firebase.
+
+Maps to `firebase.apps()`
+-}
 apps : () -> List App
 apps =
     Native.Firebase.apps
@@ -72,26 +81,53 @@ apps =
 -- App Methods
 
 
+{-| Given a configuration, initialize a new firebase app instance
+
+You will need access to the app to get the associated database, authentication, etc.
+
+Maps to `firebase.initializeApp(configuration, null)`
+-}
 init : Config -> App
 init =
     Native.Firebase.init
 
 
+{-| Given a configuration and string, initialize a new firebase app instance
+
+If you are using multiple firebase apps in your elm application, you will need to
+use this method to specify names to your apps.
+
+Maps to `window.firebase.initializeApp(configuration, name)`
+-}
 initWithName : Config -> String -> App
 initWithName =
     Native.Firebase.initWithName
 
 
+{-| Given an application, deinitialize it
+
+Maps to `firebase.app.App#delete()`
+-}
 deinit : App -> Task x ()
 deinit =
     Native.Firebase.deinit
 
 
+{-| Given an application, return it's name.
+
+Often times, this will return "[DEFAULT]"
+
+Maps to `firebase.app.App#name`
+-}
 name : App -> String
 name =
     Native.Firebase.name
 
 
+{-| Given an application, the configuration options
+
+Maps to `firebase.app.App#options`
+-}
 options : App -> Config
 options =
     Native.Firebase.options
