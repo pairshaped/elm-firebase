@@ -16,6 +16,7 @@ effect module Firebase.Database.Reference
         , toString
         , once
         , on
+        , isEqual
         )
 
 import Json.Encode
@@ -95,6 +96,11 @@ onDisconnect =
     Native.Database.Reference.onDisconnect
 
 
+isEqual : Reference -> Reference -> Bool
+isEqual =
+    Native.Database.Reference.isEqual
+
+
 once : String -> Reference -> Task x Snapshot
 once =
     Native.Database.Reference.once
@@ -165,7 +171,7 @@ onEffects router newSubs oldState =
             let
                 notSubscribed (MySub newEvent newReference _) =
                     oldState.subs
-                        |> List.filter (\(MySub event reference _) -> event == newEvent && (toString reference) == (toString newReference))
+                        |> List.filter (\(MySub event reference _) -> event == newEvent && (isEqual reference newReference))
                         |> List.isEmpty
             in
                 newSubs
@@ -176,7 +182,7 @@ onEffects router newSubs oldState =
             let
                 subscribed (MySub oldEvent oldReference tagger) =
                     newSubs
-                        |> List.filter (\(MySub event reference _) -> event == oldEvent && (toString reference) == (toString oldReference))
+                        |> List.filter (\(MySub event reference _) -> event == oldEvent && (isEqual reference oldReference))
                         |> List.isEmpty
             in
                 oldState.subs
