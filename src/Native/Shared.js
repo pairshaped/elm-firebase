@@ -1,4 +1,4 @@
-/*global _elm_lang$core$Native_Scheduler, Uint32Array */
+/*global _elm_lang$core$Native_Scheduler */
 
 /* This will be hoisted to the top of the elm function wrapper, but not be exposed to
  * the global scope.
@@ -12,59 +12,6 @@ function _pairshaped$elm_firebase$Native_Shared$onSnapshot (tagger, snapshot, pr
 }
 
 var _pairshaped$elm_firebase$Native_Shared = function () {
-  // Translated from http://codepen.io/avesus/pen/wgQmaV?editors=0012
-  // as part of this thread; http://stackoverflow.com/a/21963136/661764
-  var uuidGenerator = function () {
-    var lut = "x".repeat(256).split("").map(function (_, idx) {
-      return (idx < 16 ? "0" : "") + (idx).toString(16)
-    })
-
-    var formatUuid = function (params) {
-      var d0 = params.d0
-      var d1 = params.d1
-      var d2 = params.d2
-      var d3 = params.d3
-
-      return (
-          lut[d0       & 0xff]        + lut[d0 >>  8 & 0xff] + lut[d0 >> 16 & 0xff] + lut[d0 >> 24 & 0xff] + "-" +
-          lut[d1       & 0xff]        + lut[d1 >>  8 & 0xff] + "-" +
-          lut[d1 >> 16 & 0x0f | 0x40] + lut[d1 >> 24 & 0xff] + "-" +
-          lut[d2       & 0x3f | 0x80] + lut[d2 >>  8 & 0xff] + "-" +
-          lut[d2 >> 16 & 0xff]        + lut[d2 >> 24 & 0xff] +
-          lut[d3       & 0xff]        + lut[d3 >>  8 & 0xff] +
-          lut[d3 >> 16 & 0xff]        + lut[d3 >> 24 & 0xff]
-      )
-    }
-
-    var getRandomValuesFunc = window.crypto && window.crypto.getRandomValues ?
-      function () {
-        var dvals = new Uint32Array(4)
-        window.crypto.getRandomValues(dvals)
-        return {
-          d0: dvals[0],
-          d1: dvals[1],
-          d2: dvals[2],
-          d3: dvals[3]
-        }
-      } :
-      function () {
-        return {
-          d0: Math.random() * 0x100000000 >>> 0,
-          d1: Math.random() * 0x100000000 >>> 0,
-          d2: Math.random() * 0x100000000 >>> 0,
-          d3: Math.random() * 0x100000000 >>> 0
-        }
-      }
-
-    return function () {
-      return formatUuid(getRandomValuesFunc())
-    }
-  }
-
-
-  var uuid = uuidGenerator()
-
-
   var databaseToModel = function (database) {
     var getDatabase = function () {
       return database
@@ -121,8 +68,7 @@ var _pairshaped$elm_firebase$Native_Shared = function () {
 
     return {
       ctor: "Query",
-      query: getQuery,
-      uuid: uuid()
+      query: getQuery
     }
   }
 

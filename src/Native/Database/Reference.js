@@ -184,6 +184,12 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     return _pairshaped$elm_firebase$Native_Shared.sourceOffSnapshot(eventType, ref)
   }
 
+  var isEqual = function (refModelA, refModelB) {
+    debug(".isEqual", refModelA, refModelB)
+
+    return refModelA.reference().isEqual(refModelB.reference())
+  }
+
 
   // Helpers
 
@@ -202,9 +208,10 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     "orderByValue": orderByValue,
     "toString" : toString,
     "onDisconnect": onDisconnect,
-    "once" : F2(once),
-    "on" : F3(on),
-    "off" : F2(off)
+    "once": F2(once),
+    "on": F3(on),
+    "off": F2(off),
+    "isEqual": F2(isEqual)
   }
 }()
 
