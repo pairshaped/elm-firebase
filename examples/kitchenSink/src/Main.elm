@@ -138,6 +138,7 @@ type Msg
     | SignInAnonymously
     | SignedIn (Result Error User)
     | SignOut
+    | GetApp
     | NoOp ()
 
 
@@ -238,6 +239,13 @@ update msg model =
                 , Task.perform NoOp (Firebase.Authentication.signOut auth)
                 )
 
+        GetApp ->
+            let
+                _ =
+                    Debug.log "Firebase app" (Firebase.app ())
+            in
+                update (NoOp ()) model
+
         NoOp _ ->
             ( model
             , Cmd.none
@@ -272,6 +280,9 @@ view model =
             ]
         , div [] [ text ("Collection query = " ++ (toString model.collection)) ]
         , viewSignIn model.currentUser
+        , button
+            [ onClick GetApp ]
+            [ text "Check console for current app" ]
         ]
 
 

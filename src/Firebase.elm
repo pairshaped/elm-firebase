@@ -4,6 +4,7 @@ module Firebase
         , Config
         , sdkVersion
         , apps
+        , app
         , init
         , initWithName
         , deinit
@@ -17,7 +18,7 @@ module Firebase
 @docs App, Config
 
 # App methods
-@docs init, initWithName, deinit, name, options
+@docs app, init, initWithName, deinit, name, options
 
 # Helpers
 @docs sdkVersion, apps
@@ -76,6 +77,34 @@ apps : () -> List App
 apps =
     Native.Firebase.apps
 
+
+{-| Get the currently initialized app if there is one
+
+Maps to `firebase.app`
+-}
+
+app : () -> Maybe App
+app =
+    Native.Firebase.app
+
+
+{-| Find an app with a given name
+
+To get the default app:
+
+```
+app : Maybe Firebase.App
+app =
+    Firebase.getAppByName "[DEFAULT]"
+```
+
+Does not map to a Firebase method, it's just a convenience
+-}
+getAppByName : String -> Maybe App
+getAppByName appName =
+    apps ()
+        |> List.filter (\app -> (name app) == appName)
+        |> List.head
 
 
 -- App Methods
