@@ -1,7 +1,7 @@
 
-/*global _elm_lang$core$Native_Scheduler, _pairshaped$elm_firebase$Native_Shared, F2, F3 */
+/*global _elm_lang$core$Native_Scheduler, _ucode$elm_firebase$Native_Shared, F2, F3 */
 
-var _pairshaped$elm_firebase$Native_Database_OnDisconnect = function () { // eslint-disable-line no-unused-vars
+var _ucode$elm_firebase$Native_Database_OnDisconnect = function () { // eslint-disable-line no-unused-vars
 
   // Utilities
 
@@ -28,7 +28,7 @@ var _pairshaped$elm_firebase$Native_Database_OnDisconnect = function () { // esl
         })
         .catch(function (err) {
           callback(
-              _elm_lang$core$Native_Scheduler.fail(_pairshaped$elm_firebase$Native_Shared.errorToModel(err))
+              _elm_lang$core$Native_Scheduler.fail(_ucode$elm_firebase$Native_Shared.errorToModel(err))
             )
         })
     })
@@ -48,7 +48,7 @@ var _pairshaped$elm_firebase$Native_Database_OnDisconnect = function () { // esl
         })
         .catch(function (err) {
           callback(
-              _elm_lang$core$Native_Scheduler.fail(_pairshaped$elm_firebase$Native_Shared.errorToModel(err))
+              _elm_lang$core$Native_Scheduler.fail(_ucode$elm_firebase$Native_Shared.errorToModel(err))
             )
         })
     })
@@ -68,7 +68,7 @@ var _pairshaped$elm_firebase$Native_Database_OnDisconnect = function () { // esl
         })
         .catch(function (err) {
           callback(
-              _elm_lang$core$Native_Scheduler.fail(_pairshaped$elm_firebase$Native_Shared.errorToModel(err))
+              _elm_lang$core$Native_Scheduler.fail(_ucode$elm_firebase$Native_Shared.errorToModel(err))
             )
         })
     })
@@ -88,7 +88,7 @@ var _pairshaped$elm_firebase$Native_Database_OnDisconnect = function () { // esl
         })
         .catch(function (err) {
           callback(
-              _elm_lang$core$Native_Scheduler.fail(_pairshaped$elm_firebase$Native_Shared.errorToModel(err))
+              _elm_lang$core$Native_Scheduler.fail(_ucode$elm_firebase$Native_Shared.errorToModel(err))
             )
         })
     })
@@ -108,7 +108,7 @@ var _pairshaped$elm_firebase$Native_Database_OnDisconnect = function () { // esl
         })
         .catch(function (err) {
           callback(
-              _elm_lang$core$Native_Scheduler.fail(_pairshaped$elm_firebase$Native_Shared.errorToModel(err))
+              _elm_lang$core$Native_Scheduler.fail(_ucode$elm_firebase$Native_Shared.errorToModel(err))
             )
         })
     })

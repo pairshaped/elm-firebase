@@ -1,6 +1,6 @@
-/*global _pairshaped$elm_firebase$Native_Shared, _elm_lang$core$Native_Scheduler, F2, F3 */
+/*global _ucode$elm_firebase$Native_Shared, _elm_lang$core$Native_Scheduler, F2, F3 */
 
-var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint-disable-line no-unused-vars
+var _ucode$elm_firebase$Native_Database_Reference = function () { // eslint-disable-line no-unused-vars
 
   // Utilities
 
@@ -32,7 +32,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".child", path, refModel)
     var reference = refModel.reference().child(path)
 
-    return _pairshaped$elm_firebase$Native_Shared.referenceToModel(reference)
+    return _ucode$elm_firebase$Native_Shared.referenceToModel(reference)
   }
 
 
@@ -50,7 +50,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
         })
         .catch(function (err) {
           callback(
-              _elm_lang$core$Native_Scheduler.fail(_pairshaped$elm_firebase$Native_Shared.errorToModel(err))
+              _elm_lang$core$Native_Scheduler.fail(_ucode$elm_firebase$Native_Shared.errorToModel(err))
             )
         })
     })
@@ -71,7 +71,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
         })
         .catch(function (err) {
           callback(
-              _elm_lang$core$Native_Scheduler.fail(_pairshaped$elm_firebase$Native_Shared.errorToModel(err))
+              _elm_lang$core$Native_Scheduler.fail(_ucode$elm_firebase$Native_Shared.errorToModel(err))
             )
         })
     })
@@ -82,7 +82,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".remove", refModel)
     var ref = refModel.reference()
 
-    return _pairshaped$elm_firebase$Native_Shared.referenceToModel(ref.push())
+    return _ucode$elm_firebase$Native_Shared.referenceToModel(ref.push())
   }
 
 
@@ -103,7 +103,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".orderByChild", path, refModel)
     var ref = refModel.reference()
 
-    return _pairshaped$elm_firebase$Native_Shared.queryToModel(
+    return _ucode$elm_firebase$Native_Shared.queryToModel(
       ref.orderByChild(path)
     )
   }
@@ -113,7 +113,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".orderByKey", refModel)
     var ref = refModel.reference()
 
-    return _pairshaped$elm_firebase$Native_Shared.queryToModel(
+    return _ucode$elm_firebase$Native_Shared.queryToModel(
       ref.orderByKey()
     )
   }
@@ -123,7 +123,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".orderByPriority", refModel)
     var ref = refModel.reference()
 
-    return _pairshaped$elm_firebase$Native_Shared.queryToModel(
+    return _ucode$elm_firebase$Native_Shared.queryToModel(
       ref.orderByPriority()
     )
   }
@@ -133,7 +133,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".orderByValue", refModel)
     var ref = refModel.reference()
 
-    return _pairshaped$elm_firebase$Native_Shared.queryToModel(
+    return _ucode$elm_firebase$Native_Shared.queryToModel(
       ref.orderByValue()
     )
   }
@@ -165,7 +165,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".once", eventType, refModel)
     var ref = refModel.reference()
 
-    return _pairshaped$elm_firebase$Native_Shared.sourceOnceSnapshot(eventType, ref)
+    return _ucode$elm_firebase$Native_Shared.sourceOnceSnapshot(eventType, ref)
   }
 
 
@@ -173,7 +173,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".on", eventType, refModel, tagger)
     var ref = refModel.reference()
 
-    return _pairshaped$elm_firebase$Native_Shared.sourceOnSnapshot(eventType, ref, tagger)
+    return _ucode$elm_firebase$Native_Shared.sourceOnSnapshot(eventType, ref, tagger)
   }
 
 
@@ -181,7 +181,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".off", eventType, refModel)
     var ref = refModel.reference()
 
-    return _pairshaped$elm_firebase$Native_Shared.sourceOffSnapshot(eventType, ref)
+    return _ucode$elm_firebase$Native_Shared.sourceOffSnapshot(eventType, ref)
   }
 
   var isEqual = function (refModelA, refModelB) {

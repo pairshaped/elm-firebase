@@ -1,6 +1,6 @@
-/*global firebase, _pairshaped$elm_firebase$Native_Shared, F2 */
+/*global firebase, _ucode$elm_firebase$Native_Shared, F2 */
 
-var _pairshaped$elm_firebase$Native_Database = function () { // eslint-disable-line no-unused-vars
+var _ucode$elm_firebase$Native_Database = function () { // eslint-disable-line no-unused-vars
 
   // Utilities
 
@@ -50,7 +50,7 @@ var _pairshaped$elm_firebase$Native_Database = function () { // eslint-disable-l
       reference = dbModel.database().ref()
     }
 
-    return _pairshaped$elm_firebase$Native_Shared.referenceToModel(reference)
+    return _ucode$elm_firebase$Native_Shared.referenceToModel(reference)
   }
 
 

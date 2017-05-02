@@ -1,6 +1,6 @@
-/*global _pairshaped$elm_firebase$Native_Shared, F2, F3 */
+/*global _ucode$elm_firebase$Native_Shared, F2, F3 */
 
-var _pairshaped$elm_firebase$Native_Database_Query = function () { // eslint-disable-line no-unused-vars
+var _ucode$elm_firebase$Native_Database_Query = function () { // eslint-disable-line no-unused-vars
 
   // Utilities
 
@@ -33,7 +33,7 @@ var _pairshaped$elm_firebase$Native_Database_Query = function () { // eslint-dis
     debug(".startAt", value, maybeKey, queryModel)
     var query = queryModel.query()
 
-    return _pairshaped$elm_firebase$Native_Shared.queryToModel(
+    return _ucode$elm_firebase$Native_Shared.queryToModel(
       query.startAt(value, maybeWithDefault(undefined, maybeKey))
     )
   }
@@ -43,7 +43,7 @@ var _pairshaped$elm_firebase$Native_Database_Query = function () { // eslint-dis
     debug(".endAt", value, maybeKey, queryModel)
     var query = queryModel.query()
 
-    return _pairshaped$elm_firebase$Native_Shared.queryToModel(
+    return _ucode$elm_firebase$Native_Shared.queryToModel(
       query.endAt(value, maybeWithDefault(undefined, maybeKey))
     )
   }
@@ -53,7 +53,7 @@ var _pairshaped$elm_firebase$Native_Database_Query = function () { // eslint-dis
     debug(".equalTo", value, maybeKey, queryModel)
     var query = queryModel.query()
 
-    return _pairshaped$elm_firebase$Native_Shared.queryToModel(
+    return _ucode$elm_firebase$Native_Shared.queryToModel(
       query.equalTo(value, maybeWithDefault(undefined, maybeKey))
     )
   }
@@ -63,7 +63,7 @@ var _pairshaped$elm_firebase$Native_Database_Query = function () { // eslint-dis
     debug(".limitToFirst", limit, queryModel)
     var query = queryModel.query()
 
-    return _pairshaped$elm_firebase$Native_Shared.queryToModel(query.limitToFirst(limit))
+    return _ucode$elm_firebase$Native_Shared.queryToModel(query.limitToFirst(limit))
   }
 
 
@@ -71,7 +71,7 @@ var _pairshaped$elm_firebase$Native_Database_Query = function () { // eslint-dis
     debug(".limitToLast", limit, queryModel)
     var query = queryModel.query()
 
-    return _pairshaped$elm_firebase$Native_Shared.queryToModel(query.limitToLast(limit))
+    return _ucode$elm_firebase$Native_Shared.queryToModel(query.limitToLast(limit))
   }
 
 
@@ -79,7 +79,7 @@ var _pairshaped$elm_firebase$Native_Database_Query = function () { // eslint-dis
     debug(".queryOnce", eventType, queryModel)
     var query = queryModel.query()
 
-    return _pairshaped$elm_firebase$Native_Shared.sourceOnceSnapshot(eventType, query)
+    return _ucode$elm_firebase$Native_Shared.sourceOnceSnapshot(eventType, query)
   }
 
 
@@ -87,7 +87,7 @@ var _pairshaped$elm_firebase$Native_Database_Query = function () { // eslint-dis
     debug(".on", eventType, queryModel, tagger)
     var query = queryModel.query()
 
-    return _pairshaped$elm_firebase$Native_Shared.sourceOnSnapshot(eventType, query, tagger)
+    return _ucode$elm_firebase$Native_Shared.sourceOnSnapshot(eventType, query, tagger)
   }
 
 
@@ -95,7 +95,7 @@ var _pairshaped$elm_firebase$Native_Database_Query = function () { // eslint-dis
     debug(".off", eventType, queryModel)
     var query = queryModel.query()
 
-    return _pairshaped$elm_firebase$Native_Shared.sourceOffSnapshot(eventType, query)
+    return _ucode$elm_firebase$Native_Shared.sourceOffSnapshot(eventType, query)
   }
 
   var isEqual = function (queryModelA, queryModelB) {
