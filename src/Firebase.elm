@@ -51,6 +51,7 @@ type alias Config =
     , databaseURL : String
     , storageBucket : String
     , messagingSenderId : String
+    , projectId : String
     }
 
 
