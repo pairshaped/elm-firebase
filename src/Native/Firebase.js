@@ -29,6 +29,29 @@ var _pairshaped$elm_firebase$Native_Firebase = function () { // eslint-disable-l
     return _elm_lang$core$Native_List.fromArray(firebase.apps)
   }
 
+  var app = function (dummy) {
+    debug("Firebase.app", dummy)
+
+    try {
+      var app = firebase.app()
+
+      if (app) {
+        return {
+          ctor: "Just",
+          _0: {
+            ctor: "App",
+            app: function () { return app }
+          }
+        }
+      }
+    } catch (e) {
+      // No op
+      // firebase.app() can throw an error if an app hasn't been initialized.
+    }
+
+    return { ctor: "Nothing" }
+  }
+
 
   // Firebase.App methods
 
@@ -77,6 +100,7 @@ var _pairshaped$elm_firebase$Native_Firebase = function () { // eslint-disable-l
   return {
     "sdkVersion": sdkVersion,
     "apps": apps,
+    "app": app,
     "init": init,
     "initWithName": F2(initWithName),
     "deinit": deinit,

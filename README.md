@@ -1,8 +1,16 @@
 # WARNING
 
+## The state of this library
+
 The current state of this is very limited, and this is very much in **alpha**. Consider the API in flux.
 
 It is completely possible that master will be broken at any given time until we hit a stable 1.x.
+
+## Elm guarantees
+
+In it's current state, **elm-firebase completely removes any runtime guarantees that Elm provides**. This is because firebase is a close-source black box, full of mystery and wonder, which makes it very untestable. When you use this library, you are risking, as [@rtfeldman](https://github.com/rtfeldman) put it; "wrapping a JS library where you can't even know how it works is just bound to cost you hours of debugging down the line".
+
+With that in mind, feel free to play with this, but use it at your own risk.
 
 # elm-firebase
 
@@ -15,6 +23,8 @@ It is completely possible that master will be broken at any given time until we 
 
 ## Getting started
 
+### Elm
+
 First, you'll need to install [elm-github-install](https://github.com/gdotdesign/elm-github-install).
 
 ```
@@ -26,12 +36,12 @@ Then you can add elm-firebase to your elm-package.json like so:
 ```
 {
   "dependencies": {
-    "pairshaped/elm-firebase": "0.0.11 <= v < 1.0.0"
+    "pairshaped/elm-firebase": "0.0.13 <= v < 1.0.0"
   },
   "dependency-sources": {
     "pairshaped/elm-firebase": {
-      "url": "https://github.com/pairshaped/elm-firebase.git",
-      "ref": "master"
+      "url": "https://github.com/pairshaped/elm-firebase",
+      "ref": "v0.0.13"
     }
   }
 }
@@ -42,6 +52,28 @@ Now you're ready to install!
 ```
 $ elm-github-install
 ```
+
+### Your HTML files
+
+You'll need to include the firebase javascripts yourself. That could either mean bower, webpack+npm, or using the gstatic cdn.
+
+Here are a list of firebase versions that have or will be tested:
+
+| Version | Works?   | CDN Link |
+|---------|----------|----------|
+| 3.6.9   | YES      | https://www.gstatic.com/firebasejs/3.6.9/firebase.js |
+| 3.7.1   | Probably | https://www.gstatic.com/firebasejs/3.7.1/firebase.js |
+| 3.7.4   | YES      | https://www.gstatic.com/firebasejs/3.7.4/firebase.js |
+
+If you run into a weird or unexplainable bug, please ensure you are using a version that has been tested and verified.
+
+I expect all the 3.x firebase versions to work but sticking to known versions will help eliminate potential bugs if a method's behaviour is changed.
+
+## Key differences to the library keep things simple in Elm
+
+ - `snapshot.val()` maps to `Firebase.Database.Snapshot.value snapshot` rather than `Firebase.Database.Snapshot.val snapshot`. I chose to be more explicit because I thought `val` wasn't as meaningful as it could be.
+ - `reference.on`, `reference.off`, `query.on`, and `query.off` map to singular subscription methods: `Firebase.Database.Reference.on` and `Firebase.Database.Query.on` respectively.
+When you're done, just remove your subscription from `Sub.batch` and elm-firebase will do the rest!
 
 ## Connecting to your firebase database
 
@@ -74,12 +106,12 @@ init =
       app : Firebase.App
       app =
           Firebase.init
-              { apiKey: "your firebase api key"
-              , databaseURL: "https://your-firebase-app.firebaseio.com"
+              { apiKey = "your firebase api key"
+              , databaseURL = "https://your-firebase-app.firebaseio.com"
               , -- These are necessary for just connecting to your database
-                authDomain: ""
-              , storageBucket: ""
-              , messagingSenderId: ""
+                authDomain = ""
+              , storageBucket = ""
+              , messagingSenderId = ""
               }
 
       {-
@@ -211,6 +243,8 @@ subscriptions model =
 ```
 
 ## Example
+
+Based on excellent advice from [@pdamoc](https://github.com/pdamoc), here is [elm-firebase-todomvc](https://github.com/mrozbarry/elm-firebase-todomvc), and a live demo [here](https://elm-firebase-todomvc.firebaseapp.com/).
 
 Check out the [kitchen sink](./examples/kitchenSink/src/Main.elm) or [writer](./examples/writer/src/Main.elm) examples for information.
 

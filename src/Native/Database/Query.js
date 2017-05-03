@@ -98,15 +98,14 @@ var _pairshaped$elm_firebase$Native_Database_Query = function () { // eslint-dis
     return _pairshaped$elm_firebase$Native_Shared.sourceOffSnapshot(eventType, query)
   }
 
+  var isEqual = function (queryModelA, queryModelB) {
+    debug(".isEqual", queryModelA, queryModelB)
+
+    return queryModelA.query().isEqual(queryModelB.query())
+  }
+
 
   // Helper
-
-
-  var uuid = function (queryModel) {
-    debug(".uuid", queryModel)
-
-    return queryModel.uuid
-  }
 
 
   return {
@@ -116,9 +115,9 @@ var _pairshaped$elm_firebase$Native_Database_Query = function () { // eslint-dis
     "equalTo": F3(equalTo),
     "limitToFirst": F2(limitToFirst),
     "limitToLast": F2(limitToLast),
-    "once" : F2(once),
-    "on" : F3(on),
-    "off" : F2(off),
-    "uuid": uuid
+    "once": F2(once),
+    "on": F3(on),
+    "off": F2(off),
+    "isEqual": F2(isEqual)
   }
 }()
