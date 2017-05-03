@@ -3,5 +3,6 @@
   "authDomain": "",
   "databaseURL": "",
   "storageBucket": "",
-  "messagingSenderId": ""
+  "messagingSenderId": "",
+  "projectId": ""
 }
