@@ -15,7 +15,7 @@ With that in mind, feel free to play with this, but use it at your own risk.
 # Alternatives
 
  - [elmfire](https://github.com/ThomasWeiser/elmfire)
- - [ports](https://guide.elm-lang.org/interop/javascript.html)
+ - Using elm [port modules](https://guide.elm-lang.org/interop/javascript.html)
 
 # elm-firebase
 
