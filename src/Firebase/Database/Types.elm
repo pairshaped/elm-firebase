@@ -1,16 +1,5 @@
 module Firebase.Database.Types exposing (..)
 
-{-| Temporary documentation to enable testing.
-
-# Types
-@docs Database
-
-@docs Reference
-
---}
-
-{-| Somrthisg
---}
 type Database
     = Database
 
