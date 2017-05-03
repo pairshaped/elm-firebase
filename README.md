@@ -12,6 +12,11 @@ In it's current state, **elm-firebase completely removes any runtime guarantees 
 
 With that in mind, feel free to play with this, but use it at your own risk.
 
+# Alternatives
+
+ - [elmfire](https://github.com/ThomasWeiser/elmfire)
+ - [ports](https://guide.elm-lang.org/interop/javascript.html)
+
 # elm-firebase
 
 **elm-firebase** is a set of bindings between Elm >= 0.18 and Firebase 3.x.
@@ -64,6 +69,8 @@ Here are a list of firebase versions that have or will be tested:
 | 3.6.9   | YES      | https://www.gstatic.com/firebasejs/3.6.9/firebase.js |
 | 3.7.1   | Probably | https://www.gstatic.com/firebasejs/3.7.1/firebase.js |
 | 3.7.4   | YES      | https://www.gstatic.com/firebasejs/3.7.4/firebase.js |
+| 3.8.0   | Probably | https://www.gstatic.com/firebasejs/3.8.0/firebase.js |
+| 3.9.0   | YES      | https://www.gstatic.com/firebasejs/3.9.0/firebase.js |
 
 If you run into a weird or unexplainable bug, please ensure you are using a version that has been tested and verified.
 
@@ -112,6 +119,7 @@ init =
                 authDomain = ""
               , storageBucket = ""
               , messagingSenderId = ""
+              , projectId = ""
               }
 
       {-
@@ -248,6 +256,6 @@ Based on excellent advice from [@pdamoc](https://github.com/pdamoc), here is [el
 
 Check out the [kitchen sink](./examples/kitchenSink/src/Main.elm) or [writer](./examples/writer/src/Main.elm) examples for information.
 
-# Alternatives
+# Special Thanks
 
- - [elmfire](https://github.com/ThomasWeiser/elmfire)
+See [credits](./CREDITS.md) for a list of people who have contributed code, ideas, and support.
