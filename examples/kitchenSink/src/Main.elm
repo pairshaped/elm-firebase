@@ -70,6 +70,7 @@ type alias Flags =
     , databaseURL : String
     , storageBucket : String
     , messagingSenderId : String
+    , projectId : String
     }
 
 

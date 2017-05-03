@@ -63,6 +63,7 @@ initialModel =
         , databaseURL = ""
         , storageBucket = ""
         , messagingSenderId = ""
+        , projectId = ""
         }
     , app = Nothing
     , path = Nothing
