@@ -1,3 +1,7 @@
+# Important Note:
+
+Firebase 4.x is being open sourced, and I'll be making an effort and/or facilitating a pure translation in Elm. If you're interested in helping or following the discussion, check out [Issue #29: Translate Javascript SDK](https://github.com/pairshaped/elm-firebase/issues/29)
+
 # WARNING
 
 ## The state of this library
