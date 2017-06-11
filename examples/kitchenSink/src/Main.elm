@@ -12,7 +12,7 @@ import Firebase.Database
 import Firebase.Database.Query
 import Firebase.Database.Reference
 import Firebase.Database.Snapshot
-import Firebase.Database.Types exposing (Database, Query, Reference, Snapshot)
+import Firebase.Database.Types exposing (Database, Query, Reference, Snapshot, Event(..))
 import Firebase.Authentication
 import Firebase.Authentication.User
 import Firebase.Authentication.Types exposing (Auth, User)
@@ -29,13 +29,13 @@ main =
                 subscribeToReference : List (Sub Msg)
                 subscribeToReference =
                     if model.subscription then
-                        [ Firebase.Database.Reference.on "value" model.subRef SubscriptionChange ]
+                        [ Firebase.Database.Reference.on Value model.subRef SubscriptionChange ]
                     else
                         []
 
                 subscribeToQuery : List (Sub Msg)
                 subscribeToQuery =
-                    [ Firebase.Database.Query.on "value" model.subQuery CollectionQuery ]
+                    [ Firebase.Database.Query.on Value model.subQuery CollectionQuery ]
             in
                 Sub.batch
                     (List.append subscribeToReference subscribeToQuery)
@@ -123,7 +123,7 @@ init flags =
                 |> Firebase.Database.ref (Just "demo")
     in
         ( model
-        , Task.perform ReadDemo (Firebase.Database.Reference.once "value" ref)
+        , Task.perform ReadDemo (Firebase.Database.Reference.once Value ref)
         )
 
 

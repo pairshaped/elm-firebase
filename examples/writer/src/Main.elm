@@ -11,7 +11,7 @@ import Firebase.Errors exposing (Error)
 import Firebase.Database
 import Firebase.Database.Reference
 import Firebase.Database.Snapshot
-import Firebase.Database.Types exposing (Database, Reference, Snapshot)
+import Firebase.Database.Types exposing (Database, Reference, Snapshot, Event(..))
 import Firebase.Authentication
 import Firebase.Authentication.Types exposing (User)
 
@@ -26,7 +26,7 @@ main =
             case model.reference of
                 Just ref ->
                     Sub.batch
-                        [ Firebase.Database.Reference.on "value" ref UpdatedSnapshot
+                        [ Firebase.Database.Reference.on Value ref UpdatedSnapshot
                         ]
 
                 Nothing ->

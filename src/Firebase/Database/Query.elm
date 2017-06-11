@@ -34,7 +34,8 @@ For more information on all of these functions, see [the firebase docs](https://
 
 import Json.Encode
 import Task exposing (Task)
-import Firebase.Database.Types exposing (Query, Reference, Snapshot)
+import Firebase.Database exposing (eventString)
+import Firebase.Database.Types exposing (Query, Reference, Snapshot, Event(..))
 import Native.Database.Query
 
 
@@ -158,36 +159,36 @@ limitToLast =
 
 Event types include:
 
- - `"value"` - get the value of the objects matching the query.
- - `"child_added"` - get the first new child in the current query.
- - `"child_changed"` - get the first modified child in the current query.
- - `"child_removed"` - get the first child modified to by null in the current query.
- - `"child_moved"` - get the object where the key has changed in the current query.
+ - `Value` - get the value of the objects matching the query.
+ - `ChileAdded` - get the first new child in the current query.
+ - `ChileChanged` - get the first modified child in the current query.
+ - `ChildRemoved` - get the first child modified by null in the current query.
+ - `ChildMoved` - get the object where the key has changed in the current query.
 
 Most likely, with one-off queries using `.once`, you'll be using `"value"`.
 
 See [firebase.database.Query#once](https://firebase.google.com/docs/reference/js/firebase.database.Query#once)
 -}
-once : String -> Query -> Task x Snapshot
-once =
-    Native.Database.Query.once
+once : Event -> Query -> Task x Snapshot
+once event =
+    Native.Database.Query.once (eventString event)
 
 
 {-| Given an event type and query, return a subscription to this query
 
 Even types include:
 
- - `"value"` - watch all values matching this query
- - `"child_added"` - watch for all new children added matching this query
- - `"child_changed"` - watch for all modified children matching this query
- - `"child_removed"` - watch for all children that stop matching this query or are deleted
- - `"child_moved"` - watch for all children with modified keys matching this query
+ - `Value` - get the value of the objects matching the query.
+ - `ChileAdded` - get the first new child in the current query.
+ - `ChileChanged` - get the first modified child in the current query.
+ - `ChildRemoved` - get the first child modified to null in the current query.
+ - `ChildMoved` - get the object where the key has changed in the current query.
 
 See [firebase.database.Query#once](https://firebase.google.com/docs/reference/js/firebase.database.Query#once)
 -}
-on : String -> Query -> (Snapshot -> msg) -> Sub msg
+on : Event -> Query -> (Snapshot -> msg) -> Sub msg
 on event query tagger =
-    subscription (MySub event query tagger)
+    subscription (MySub (eventString event) query tagger)
 
 
 

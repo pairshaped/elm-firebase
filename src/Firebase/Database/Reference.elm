@@ -21,7 +21,8 @@ effect module Firebase.Database.Reference
 
 import Json.Encode
 import Task exposing (Task)
-import Firebase.Database.Types exposing (Reference, Snapshot, Query, OnDisconnect)
+import Firebase.Database exposing (eventString)
+import Firebase.Database.Types exposing (Reference, Snapshot, Query, OnDisconnect, Event)
 import Firebase.Errors exposing (Error)
 import Native.Database.Reference
 
@@ -101,14 +102,14 @@ isEqual =
     Native.Database.Reference.isEqual
 
 
-once : String -> Reference -> Task x Snapshot
-once =
-    Native.Database.Reference.once
+once : Event -> Reference -> Task x Snapshot
+once event =
+    Native.Database.Reference.once (eventString event)
 
 
-on : String -> Reference -> (Snapshot -> msg) -> Sub msg
+on : Event -> Reference -> (Snapshot -> msg) -> Sub msg
 on event reference tagger =
-    subscription (MySub event reference tagger)
+    subscription (MySub (eventString event) reference tagger)
 
 
 
