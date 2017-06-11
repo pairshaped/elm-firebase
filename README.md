@@ -50,7 +50,7 @@ Then you can add elm-firebase to your elm-package.json like so:
   "dependency-sources": {
     "pairshaped/elm-firebase": {
       "url": "https://github.com/pairshaped/elm-firebase",
-      "ref": "v0.0.13"
+      "ref": "0.0.13"
     }
   }
 }
