@@ -22,7 +22,7 @@ child =
 
 exists : Snapshot -> Bool
 exists =
-    Native.Database.exists
+    Native.Database.Snapshot.exists
 
 
 exportVal : Snapshot -> Json.Decode.Value
