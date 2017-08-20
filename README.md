@@ -36,13 +36,13 @@ With that in mind, feel free to play with this, but use it at your own risk.
 
 First, you'll need to install [elm-github-install](https://github.com/gdotdesign/elm-github-install).
 
-```
+```bash
 $ npm install elm-github-install -g
 ```
 
 Then you can add elm-firebase to your elm-package.json like so:
 
-```
+```json
 {
   "dependencies": {
     "pairshaped/elm-firebase": "0.0.13 <= v < 1.0.0"
@@ -58,7 +58,7 @@ Then you can add elm-firebase to your elm-package.json like so:
 
 Now you're ready to install!
 
-```
+```bash
 $ elm-github-install
 ```
 
@@ -88,7 +88,7 @@ When you're done, just remove your subscription from `Sub.batch` and elm-firebas
 
 ## Connecting to your firebase database
 
-```
+```elm
 import Html
 import Firebase
 import Firebase.Database.Types
@@ -148,7 +148,7 @@ init =
 
 ## Getting the value of a reference
 
-```
+```elm
 import Firebase
 import Firebase.Database.Types
 import Firebase.Database.Reference
@@ -197,7 +197,7 @@ update msg model =
 
 ## Subscribing to changes of a reference
 
-```
+```elm
 import Firebase
 import Firebase.Database.Types
 import Firebase.Database.Reference
