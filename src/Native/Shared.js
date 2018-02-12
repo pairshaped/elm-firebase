@@ -72,30 +72,33 @@ var _pairshaped$elm_firebase$Native_Shared = function () {
     }
   }
 
+  // shorthand for native APIs
+  var nativeBinding = _elm_lang$core$Native_Scheduler.nativeBinding;
+  var succeed = _elm_lang$core$Native_Scheduler.succeed;
 
   var sourceOnSnapshot = function (eventType, source, tagger) {
-    return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
+    return nativeBinding(function (callback) {
       source.on(eventType, _pairshaped$elm_firebase$Native_Shared$onSnapshot.bind(window, tagger))
 
-      callback(_elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" }))
+      callback(succeed({ ctor: "_Tuple0" }))
     })
   }
 
 
   var sourceOffSnapshot = function (eventType, source) {
-    return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
+    return nativeBinding(function (callback) {
       source.off(eventType, _pairshaped$elm_firebase$Native_Shared$onSnapshot)
 
-      callback(_elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" }))
+      callback(succeed({ ctor: "_Tuple0" }))
     })
   }
 
 
   var sourceOnceSnapshot = function (eventType, source) {
-    return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
+    return nativeBinding(function (callback) {
       source.once(eventType, function (snapshot) {
         callback(
-          _elm_lang$core$Native_Scheduler.succeed(
+          succeed(
             _pairshaped$elm_firebase$Native_Shared.snapshotToModel(snapshot)
           )
         )

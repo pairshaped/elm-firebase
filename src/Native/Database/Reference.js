@@ -10,6 +10,14 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     // console.log.apply(console, args)
   }
 
+  // shorthand for native APIs
+  var unit = {ctor: '_Tuple0'};
+  var nativeBinding = _elm_lang$core$Native_Scheduler.nativeBinding;
+  var succeed = _elm_lang$core$Native_Scheduler.succeed;
+  var fail = _elm_lang$core$Native_Scheduler.fail;
+
+  // shorthand for shared APIs
+  var nativeShared = _pairshaped$elm_firebase$Native_Shared;
 
   // Reference methods
 
@@ -32,25 +40,25 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".child", path, refModel)
     var reference = refModel.reference().child(path)
 
-    return _pairshaped$elm_firebase$Native_Shared.referenceToModel(reference)
+    return nativeShared.referenceToModel(reference)
   }
 
 
   var set = function (json, refModel) {
     debug(".set", json, refModel)
 
-    return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
+    return nativeBinding(function (callback) {
       refModel
         .reference()
         .set(json)
         .then(function () {
           callback(
-              _elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" })
+              succeed(unit)
             )
         })
         .catch(function (err) {
           callback(
-              _elm_lang$core$Native_Scheduler.fail(_pairshaped$elm_firebase$Native_Shared.errorToModel(err))
+              fail(nativeShared.errorToModel(err))
             )
         })
     })
@@ -60,18 +68,18 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
   var update = function (json, refModel) {
     debug(".update", json, refModel)
 
-    return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
+    return nativeBinding(function (callback) {
       refModel
         .reference()
         .update(json)
         .then(function () {
           callback(
-            _elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" })
+            succeed(unit)
           )
         })
         .catch(function (err) {
           callback(
-              _elm_lang$core$Native_Scheduler.fail(_pairshaped$elm_firebase$Native_Shared.errorToModel(err))
+              fail(nativeShared.errorToModel(err))
             )
         })
     })
@@ -82,17 +90,17 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".remove", refModel)
     var ref = refModel.reference()
 
-    return _pairshaped$elm_firebase$Native_Shared.referenceToModel(ref.push())
+    return nativeShared.referenceToModel(ref.push())
   }
 
 
   var remove = function (refModel) {
     debug(".remove", refModel)
 
-    return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
+    return nativeBinding(function (callback) {
       refModel.reference().remove(function () {
         callback(
-          _elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" })
+          succeed(unit)
         )
       })
     })
@@ -103,7 +111,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".orderByChild", path, refModel)
     var ref = refModel.reference()
 
-    return _pairshaped$elm_firebase$Native_Shared.queryToModel(
+    return nativeShared.queryToModel(
       ref.orderByChild(path)
     )
   }
@@ -113,7 +121,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".orderByKey", refModel)
     var ref = refModel.reference()
 
-    return _pairshaped$elm_firebase$Native_Shared.queryToModel(
+    return nativeShared.queryToModel(
       ref.orderByKey()
     )
   }
@@ -123,7 +131,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".orderByPriority", refModel)
     var ref = refModel.reference()
 
-    return _pairshaped$elm_firebase$Native_Shared.queryToModel(
+    return nativeShared.queryToModel(
       ref.orderByPriority()
     )
   }
@@ -133,7 +141,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".orderByValue", refModel)
     var ref = refModel.reference()
 
-    return _pairshaped$elm_firebase$Native_Shared.queryToModel(
+    return nativeShared.queryToModel(
       ref.orderByValue()
     )
   }
@@ -165,7 +173,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".once", eventType, refModel)
     var ref = refModel.reference()
 
-    return _pairshaped$elm_firebase$Native_Shared.sourceOnceSnapshot(eventType, ref)
+    return nativeShared.sourceOnceSnapshot(eventType, ref)
   }
 
 
@@ -173,7 +181,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".on", eventType, refModel, tagger)
     var ref = refModel.reference()
 
-    return _pairshaped$elm_firebase$Native_Shared.sourceOnSnapshot(eventType, ref, tagger)
+    return nativeShared.sourceOnSnapshot(eventType, ref, tagger)
   }
 
 
@@ -181,7 +189,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".off", eventType, refModel)
     var ref = refModel.reference()
 
-    return _pairshaped$elm_firebase$Native_Shared.sourceOffSnapshot(eventType, ref)
+    return nativeShared.sourceOffSnapshot(eventType, ref)
   }
 
   var isEqual = function (refModelA, refModelB) {
@@ -214,4 +222,3 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     "isEqual": F2(isEqual)
   }
 }()
-
