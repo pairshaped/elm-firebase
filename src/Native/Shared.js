@@ -87,7 +87,8 @@ var _pairshaped$elm_firebase$Native_Shared = function () {
 
   var sourceOffSnapshot = function (eventType, source) {
     return nativeBinding(function (callback) {
-      source.off(eventType, _pairshaped$elm_firebase$Native_Shared$onSnapshot)
+      source.off(eventType)
+      //source.off(eventType, _pairshaped$elm_firebase$Native_Shared$onSnapshot)
 
       callback(succeed({ ctor: "_Tuple0" }))
     })
