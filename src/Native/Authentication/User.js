@@ -1,6 +1,6 @@
 /*global _elm_lang$core$Native_Scheduler */
 
-var _pairshaped$elm_firebase$Native_Authentication_User = function () { // eslint-disable-line no-unused-vars
+var _ucode$elm_firebase$Native_Authentication_User = function () { // eslint-disable-line no-unused-vars
 
   // Utilities
 

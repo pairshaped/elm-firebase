@@ -1,6 +1,6 @@
-/*global _pairshaped$elm_firebase$Native_Shared, F2 */
+/*global _ucode$elm_firebase$Native_Shared, F2 */
 
-var _pairshaped$elm_firebase$Native_Database_Snapshot = function () { // eslint-disable-line no-unused-vars
+var _ucode$elm_firebase$Native_Database_Snapshot = function () { // eslint-disable-line no-unused-vars
 
   // Utilities
 
@@ -27,14 +27,14 @@ var _pairshaped$elm_firebase$Native_Database_Snapshot = function () { // eslint-
     debug(".ref", snapshotModel)
     var snapshot = snapshotModel.snapshot()
 
-    return _pairshaped$elm_firebase$Native_Shared.referenceToModel(snapshot.ref)
+    return _ucode$elm_firebase$Native_Shared.referenceToModel(snapshot.ref)
   }
 
   var child = function (path, snapshotModel) {
     debug(".child", path, snapshotModel)
     var snapshot = snapshotModel.snapshot()
 
-    return _pairshaped$elm_firebase$Native_Shared.snapshotToModel(snapshot.child(path))
+    return _ucode$elm_firebase$Native_Shared.snapshotToModel(snapshot.child(path))
   }
 
   var exists = function (snapshotModel) {

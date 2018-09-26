@@ -3,15 +3,15 @@
 /* This will be hoisted to the top of the elm function wrapper, but not be exposed to
  * the global scope.
  */
-function _pairshaped$elm_firebase$Native_Shared$onSnapshot (tagger, snapshot, prevKey) {
+function _ucode$elm_firebase$Native_Shared$onSnapshot (tagger, snapshot, prevKey) {
   _elm_lang$core$Native_Scheduler.rawSpawn(
     tagger(
-      _pairshaped$elm_firebase$Native_Shared.snapshotToModel(snapshot, prevKey)
+      _ucode$elm_firebase$Native_Shared.snapshotToModel(snapshot, prevKey)
     )
   )
 }
 
-var _pairshaped$elm_firebase$Native_Shared = function () {
+var _ucode$elm_firebase$Native_Shared = function () {
   var databaseToModel = function (database) {
     var getDatabase = function () {
       return database
@@ -75,7 +75,7 @@ var _pairshaped$elm_firebase$Native_Shared = function () {
 
   var sourceOnSnapshot = function (eventType, source, tagger) {
     return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
-      source.on(eventType, _pairshaped$elm_firebase$Native_Shared$onSnapshot.bind(window, tagger))
+      source.on(eventType, _ucode$elm_firebase$Native_Shared$onSnapshot.bind(window, tagger))
 
       callback(_elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" }))
     })
@@ -84,7 +84,7 @@ var _pairshaped$elm_firebase$Native_Shared = function () {
 
   var sourceOffSnapshot = function (eventType, source) {
     return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
-      source.off(eventType, _pairshaped$elm_firebase$Native_Shared$onSnapshot)
+      source.off(eventType, _ucode$elm_firebase$Native_Shared$onSnapshot)
 
       callback(_elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" }))
     })
@@ -96,7 +96,7 @@ var _pairshaped$elm_firebase$Native_Shared = function () {
       source.once(eventType, function (snapshot) {
         callback(
           _elm_lang$core$Native_Scheduler.succeed(
-            _pairshaped$elm_firebase$Native_Shared.snapshotToModel(snapshot)
+            _ucode$elm_firebase$Native_Shared.snapshotToModel(snapshot)
           )
         )
 

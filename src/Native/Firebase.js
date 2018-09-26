@@ -10,7 +10,7 @@ if (typeof global == "object" && !global.firebase && typeof require == "function
 }
 
 
-var _pairshaped$elm_firebase$Native_Firebase = function () { // eslint-disable-line no-unused-vars
+var _ucode$elm_firebase$Native_Firebase = function () { // eslint-disable-line no-unused-vars
   var debug = function () {
     // var args = ["Native.Firebase.debug"].concat(Array.prototype.slice.call(arguments))
     //
