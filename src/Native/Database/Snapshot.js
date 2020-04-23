@@ -42,8 +42,6 @@ var _pairshaped$elm_firebase$Native_Database_Snapshot = function () { // eslint-
     var snapshot = snapshotModel.snapshot()
 
     return snapshot.exists()
-      ? { ctor: "True" }
-      : { ctor: "False" }
   }
 
   var exportVal = function (snapshotModel) {

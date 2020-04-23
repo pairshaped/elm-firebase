@@ -52,11 +52,9 @@ var _pairshaped$elm_firebase$Native_Authentication = function () { // eslint-dis
     debug(".currentUser", authModel)
     var auth = authModel.auth()
 
-    return userToModel(
-      auth.currentUser
-        ? { ctor: "Just", _0: auth.currentUser }
-        : { ctor: "Nothing }"}
-    )
+    return  auth.currentUser
+        ? { ctor: "Just", _0: userToModel(auth.currentUser) }
+        : { ctor: "Nothing"}
   }
 
 
